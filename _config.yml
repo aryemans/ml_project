@@ -22,7 +22,7 @@ title: CS 4641 Project
 email: asingh899@gatech.edu
 description: >- # this means to ignore newlines until "baseurl:"
   We are in CS 4641 and working on an ML Project at Georgia Tech.
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://aryemans.github.io/ml_project/" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  jekyll
