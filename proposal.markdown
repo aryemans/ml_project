@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Proposal
-permalink: /proposal/
+permalink: /proposal
 ---
 
 ## Proposal Sections & Checklist
