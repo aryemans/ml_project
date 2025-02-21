@@ -46,8 +46,10 @@ We expect logistic regression to perform the best overall in terms of accuracy a
 ---
 
 ### 5. References
-[1] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” Mining Text Data, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6 
+[1] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” Mining Text Data, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6
+
 [2] I. Dawar, N. Kumar, S. Negi, S. Pathan, and S. Layek, “Text categorization using supervised machine learning techniques,” 2023 Sixth International Conference of Women in Data Science at Prince Sultan University (WiDS PSU), Mar. 2023. doi:10.1109/wids-psu57071.2023.00046 
+
 [3] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” PLOS ONE, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762 
 
 ---   
