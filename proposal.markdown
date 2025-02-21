@@ -65,8 +65,8 @@ We expect logistic regression to perform the best in accuracy and F1 Score due t
      | Name    | Proposal Contributions |
      |---------|------------------------|
      | Naman Goyal | Video Recording, Video Creation |
-     | Aryeman Singh | Github Pages, Problem Definition, Motivation |
-     | Sameer Arora  | References, Potential Dataset |
+     | Aryeman Singh | GitHub Pages, Problem Definition, Motivation |
+     | Sameer Arora  | Introduction, Methods, References, Potential Dataset |
      | Aryika Kumar | Gantt Chart, Results, Presentation |
      | Sanjay Lokkit Babu Narayanan | Methods, Presentation |
 
