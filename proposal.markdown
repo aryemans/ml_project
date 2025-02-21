@@ -25,11 +25,11 @@ To improve semantic understanding, **BERT-based embeddings** via **Hugging Face'
 ### Classification Models
 Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification:
 
-- **Naïve Bayes (NB)**: A probabilistic classifier using **MultinomialNB from scikit-learn**, known for its scalability and efficiency [3], [4].
-    
-- **Support Vector Machines (SVM)**: Uses **SVC from scikit-learn**, leveraging hyperplanes to separate text classes efficiently [1], [4].
-    
-- **Random Forest (RF)**: An ensemble method using **RandomForestClassifier from scikit-learn**, which reduces overfitting by averaging multiple decision trees [1], [4].
+Naïve Bayes (NB), implemented via **MultinomialNB** in **scikit-learn**, is a probabilistic classifier that assumes feature independence, enabling efficient training and scalability [3], [4]. 
+
+Support Vector Machines (SVM), using **SVC** from **scikit-learn**, construct hyperplanes for binary classification and leverage kernel functions to handle high-dimensional spaces effectively [1], [4]. 
+
+Random Forest (RF), implemented with **RandomForestClassifier** in **scikit-learn**, aggregates multiple decision trees for classification but requires careful tuning to balance computation time and overfitting risk [1], [4].
 
 ### 4. (Potential) Results and Discussion
 
