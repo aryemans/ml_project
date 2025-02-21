@@ -48,30 +48,11 @@ We expect logistic regression to perform the best overall in terms of accuracy a
 [3] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” PLOS ONE, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762 
 
 ---   
-- **Gantt Chart**: list each member’s planned responsibilities for the entirety of the project. Feel free to use the Fall and Spring semester sample Gantt Chart.  
+- **Gantt Chart**: list each member’s planned responsibilities for the entirety of the project. Feel free to use the Fall and Spring semester sample Gantt Chart.
+[**Full Gantt Chart**](https://gtvault-my.sharepoint.com/:x:/g/personal/akumar906_gatech_edu/EXJc6ihn5flFu38MAn05b_4BzrnPT7ZUKWCx_jXX8MH5Eg?e=ktaplx)
 
-```gantt
-    dateFormat  YYYY-MM-DD
-    title Example Project Gantt Chart
-    
-    section Phase 1: Problem Definition
-    Literature Review      :task1, 2025-02-01, 2025-02-07
-    Dataset Research       :task2, after task1, 5d
-    
-    section Phase 2: Data Collection & Preprocessing
-    Data Collection        :task3, 2025-02-13, 2025-02-20
-    Data Cleaning          :task4, after task3, 5d
-    Feature Engineering    :task5, after task4, 5d
-    
-    section Phase 3: Modeling
-    Model Selection        :task6, 2025-03-01, 2025-03-07
-    Model Training         :task7, after task6, 7d
-    
-    section Phase 4: Evaluation & Report
-    Model Evaluation       :task8, 2025-03-15, 2025-03-21
-    Proposal/Report Prep   :task9, after task8, 5d
-    Video Presentation     :task10, after task9, 3d
-```
+<img width="338" alt="Screenshot 2025-02-21 at 5 06 18 PM" src="https://github.com/user-attachments/assets/ed6d20b4-1640-4a3d-be48-236dd2529874" />
+
 
 - **Contribution Table**: list all group members’ names and explicit contributions in preparing the proposal using the format below.
 
