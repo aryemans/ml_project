@@ -8,14 +8,9 @@ permalink: /proposal
 
 ### 1. Introduction/Background
 
-Within Natural Language Processing (NLP), text classification is key challenge that is being heavily researched by many teams across the field. Text classification has applications in various domains, including machine learning research and their associated papers. Prior research into research paper classification has involved approaches from traditional models, such as Support Vector Machines, due to their effiency and interpretability. The models, when trained on well-defined features of text data, can offer robust classification of structured texts, such as those of research papers.
+Text classification is a supervised learning task to categorize textual data, with applications across various domains. This study focuses on classifying machine learning research abstracts based on research area and methodology. Prior work highlights effective models such as Support Vector Machines, Decision Trees, and Naive Bayes. These models, when trained on well-defined textual features, can provide robust classification [2]. 
 
-Within text classification, developments have also occurred in the preprocessing steps for the text, where techniques such as topic modeling, term frequency - inverse document frequeuncy, and bag-of-words have arisen to aid in extracting features from the text. This study intends to analyze the effectiveness of traditional machine learning models in classifying machine learning research abstracts by the research area and the machine learning methodologies used within the paper. The study will evaluate different algorithms to determine which models yield the highest accuracy.
-
-The dataset will consist of machine learning research abstracts, labeled by machine learning methodologis and the research field. The preprocessing pipelinee will include x......x to extract features such as x.....x. 
-
-The dataset will be created by pulling peer-reviewed papers and their associated abstracts from the following site: https://paperswithcode.com/. 
-
+Preprocessing techniques like stemming, term frequency-inverse document frequency, and bag-of-words play a crucial role in extracting relevant features [1]. This study will evaluate traditional machine learning models to determine which yields the highest accuracy in classifying abstracts. The dataset will consist of labeled machine learning research abstracts, sourced from [**Papers with Code**](https://paperswithcode.com/). A preprocessing pipeline will be implemented to extract key textual features, ensuring high-quality input for model training and evaluation. Ultimately, this research aims to identify the most effective approach for text classification in this context.
 ### 2. Problem Definition
  
 As machine learning research expands and the number of papers published grows, it is pertinent for researchers to efficiently gather other papers which use similar machine learning methods within the same research domain. Keyword matching forms the basis of today's search methods, yet this may not accurately account for methodological similarities between papers in the same domain. Any ineffiencies within similarity search for papers can introduce bottlenecks to comparing the results of research.
