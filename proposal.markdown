@@ -3,29 +3,34 @@ layout: page
 title: Proposal
 permalink: /proposal
 ---
+## Introduction/Background
 
-## Proposal Sections & Checklist
+Text classification is a supervised learning task to categorize textual data, with applications across various domains. This study focuses on classifying machine learning research abstracts based on research area and methodology. Prior work highlights effective models such as Support Vector Machines, Decision Trees, and Naïve Bayes, which, when trained on well-defined textual features provided from pre-processing methods such as stemming, TF-IDF, and bag-of-words can provide robust classification [1]–[4]. 
 
-### 1. Introduction/Background
+To evaluate classification accuracy, this study will test machine learning models on **Introduction** and **Conclusion** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
 
-Text classification is a supervised learning task to categorize textual data, with applications across various domains. This study focuses on classifying machine learning research abstracts based on research area and methodology. Prior work highlights effective models such as Support Vector Machines, Decision Trees, and Naive Bayes. These models, when trained on well-defined textual features, can provide robust classification [2]. 
+## Problem Definition
+As the world of machine learning focused research expands, gathering relevant literature for review within a specific domain gets increasingly difficult. Modern keyword matching techniques do not accurately capture deeper semantic meaning and context. As a result, a structured approach to classify machine learning research papers and provide researchers with quick access to relevant papers and efficiently analyze their domain. 
 
-Preprocessing techniques like stemming, term frequency-inverse document frequency, and bag-of-words play a crucial role in extracting relevant features [1]. This study will evaluate traditional machine learning models to determine which yields the highest accuracy in classifying abstracts. The dataset will consist of labeled machine learning research abstracts, sourced from [**Papers with Code**](https://paperswithcode.com/). A preprocessing pipeline will be implemented to extract key textual features, ensuring high-quality input for model training and evaluation. Ultimately, this research aims to identify the most effective approach for text classification in this context.
-### 2. Problem Definition
- 
-As machine learning research expands and the number of papers published grows, it is pertinent for researchers to efficiently gather other papers which use similar machine learning methods within the same research domain. Keyword matching forms the basis of today's search methods, yet this may not accurately account for methodological similarities between papers in the same domain. Any ineffiencies within similarity search for papers can introduce bottlenecks to comparing the results of research.
+## Methods
+### Data-Pre-Processing Methods
+To improve classification accuracy, the following preprocessing steps will be applied using **NLTK** and **scikit-learn**. 
 
-A structured approach to reseach abstract classification by both research topic and machine learning methodology would enable researchers to find other relevant papers quickly. By evaluating traditional models, the study can provide an interpretable and efficient solution to categorize research and streamline the process of comparing research results.
+Text normalization and tokenization refine the text by lowercasing words, expanding contractions, and splitting text into meaningful units. Lemmatization reduces words to their base forms, and stopword removal eliminates non-informative words [2]. This will be done using NLTK's **word_tokenize()**, **WordNetLemmatizer**, and **stopwords** module. 
 
-### 3. Methods
+Feature extraction techniques such as **bag-of-words** and **TF-IDF** with **sci-kit learn's TfidfVectorizer** help quantify the importance of words. While term frequency gives greater weight to common words, IDF penalizes frequently occurring terms, highlighting specific terminology relevant to research papers [1]. 
 
-## Data Pre-Processing Methods
-To effectively classify research paper abstracts, robust data preprocessing is essential. Tokenization and stopword removal help refine the text by breaking it into words and removing common terms that do not contribute to classification. TF-IDF transformation converts abstracts into numerical representations by weighing words based on their frequency and importance in the dataset. This is particularly useful for models like SVM. For deeper contextual understanding, word embeddings such as BERT provide dense vector representations that capture relationships between words in research abstracts. Additionally, lemmatization and stemming standardize words to their base forms, ensuring consistency in the dataset. These preprocessing steps improve the quality of the input data, making machine learning models more efficient and accurate.
+To improve semantic understanding, **BERT-based embeddings** via **Hugging Face's transformers library** generate dense vector representations, capturing contextual meaning beyond word frequency [1]. 
 
-## Machine Learning Algorithms
-For classification, Support Vector Machines (SVMs) are used as a supervised learning model to assign abstracts to predefined categories. When labeled data is scarce, K-Means Clustering groups abstracts into clusters based on textual similarities, aiding in topic discovery. This can also be used for semi-supervised learning, where pseudo-labels from clusters expand the training set for SVM. Additionally, Latent Dirichlet Allocation (LDA) extracts underlying research topics, helping interpret abstract clusters. By integrating these models, we combine supervised classification with unsupervised topic discovery, enhancing both structured classification and exploratory analysis of research papers.
+### Machine Learning Models
+Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification:
 
----
+- **Naïve Bayes (NB)**: A probabilistic classifier using **MultinomialNB from scikit-learn**, known for its scalability and efficiency [3], [4].
+    
+- **Support Vector Machines (SVM)**: Uses **SVC from scikit-learn**, leveraging hyperplanes to separate text classes efficiently [1], [4].
+    
+- **Random Forest (RF)**: An ensemble method using **RandomForestClassifier from scikit-learn**, which reduces overfitting by averaging multiple decision trees [1], [4].
+
 ### 4. (Potential) Results and Discussion
 
 - **Metrics**
@@ -40,11 +45,13 @@ We expect logistic regression to perform the best in accuracy and F1 Score due t
 ---
 
 ### 5. References
-[1] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” Mining Text Data, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6
+[1] A. Gasparetto, M. Marcuzzo, A. Zangari, and A. Albarelli, “A survey on text classification algorithms: From text to predictions,” Information, vol. 13, no. 2, Feb. 2022. doi:10.3390/info13020083
 
-[2] I. Dawar, N. Kumar, S. Negi, S. Pathan, and S. Layek, “Text categorization using supervised machine learning techniques,” 2023 Sixth International Conference of Women in Data Science at Prince Sultan University (WiDS PSU), Mar. 2023. doi:10.1109/wids-psu57071.2023.00046 
+[2] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” Mining Text Data, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6
 
-[3] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” PLOS ONE, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762 
+[3] I. Dawar, N. Kumar, S. Negi, S. Pathan, and S. Layek, “Text categorization using supervised machine learning techniques,” 2023 Sixth International Conference of Women in Data Science at Prince Sultan University (WiDS PSU), Mar. 2023. doi:10.1109/wids-psu57071.2023.00046
+
+[4] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” PLOS ONE, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762
 
 ---   
 - **Gantt Chart**: 
