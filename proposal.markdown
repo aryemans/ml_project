@@ -58,11 +58,11 @@ We expect logistic regression to perform the best overall in terms of accuracy a
 
      | Name    | Proposal Contributions |
      |---------|------------------------|
-     | Naman Goyal | Contributions       |
-     | Aryeman Singh | Contributions     |
-     | Sameer Arora  | Contributions  |
-     | Aryika Kumar | Contributions |
-     | Sanjay Lokkit Babu Narayanan | Contributions |
+     | Naman Goyal | Video Recording, Video Creation |
+     | Aryeman Singh | Github Pages, Problem Definition, Motivation |
+     | Sameer Arora  | References, Potential Dataset |
+     | Aryika Kumar | Gantt Chart, Results, Presentation |
+     | Sanjay Lokkit Babu Narayanan | Methods, Presentation |
 
 
 2. **Video Presentation**  
