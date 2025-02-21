@@ -7,17 +7,20 @@ permalink: /proposal
 ## Proposal Sections & Checklist
 
 ### 1. Introduction/Background
-Provide an introduction of your topic and literature review of related work. Briefly explain your dataset and its features, and provide a link to the dataset if possible.
 
-- **Literature Review**  
-- **Dataset Description**  
-- **Dataset Link**
+Within Natural Language Processing (NLP), text classification is key challenge that is being heavily researched by many teams across the field. Text classification has applications in various domains, including machine learning research and their associated papers. Prior research into research paper classification has involved approaches from traditional models, such as Support Vector Machines, due to their effiency and interpretability. The models, when trained on well-defined features of text data, can offer robust classification of structured texts, such as those of research papers.
+
+Within text classification, developments have also occurred in the preprocessing steps for the text, where techniques such as topic modeling, term frequency - inverse document frequeuncy, and bag-of-words have arisen to aid in extracting features from the text. This study intends to analyze the effectiveness of traditional machine learning models in classifying machine learning research abstracts by the research area and the machine learning methodologies used within the paper. The study will evaluate different algorithms to determine which models yield the highest accuracy.
+
+The dataset will consist of machine learning research abstracts, labeled by machine learning methodologis and the research field. The preprocessing pipelinee will include x......x to extract features such as x.....x. 
+
+The dataset will be created by pulling peer-reviewed papers and their associated abstracts from the following site: https://paperswithcode.com/. 
 
 ### 2. Problem Definition
-Identify a problem and motivate the need for a solution.
+ 
+As machine learning research expands and the number of papers published grows, it is pertinent for researchers to efficiently gather other papers which use similar machine learning methods within the same research domain. Keyword matching forms the basis of today's search methods, yet this may not accurately account for methodological similarities between papers in the same domain. Any ineffiencies within similarity search for papers can introduce bottlenecks to comparing the results of research.
 
-- **Problem**  
-- **Motivation**  
+A structured approach to reseach abstract classification by both research topic and machine learning methodology would enable researchers to find other relevant papers quickly. By evaluating traditional models, the study can provide an interpretable and efficient solution to categorize research and streamline the process of comparing research results.
 
 ### 3. Methods
 Present proposed solutions including specific data processing methods and machine learning algorithms, and elaborate on why you think each will be effective. It is recommended to identify specific functions/classes in existing packages and libraries (i.e. scikit-learn) rather than coding the algorithms from scratch.
