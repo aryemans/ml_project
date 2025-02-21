@@ -22,7 +22,7 @@ Feature extraction techniques such as **bag-of-words** and **TF-IDF** with **sci
 
 To improve semantic understanding, **BERT-based embeddings** via **Hugging Face's transformers library** generate dense vector representations, capturing contextual meaning beyond word frequency [1]. 
 
-### Machine Learning Models
+### Classification Models
 Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification:
 
 - **Naïve Bayes (NB)**: A probabilistic classifier using **MultinomialNB from scikit-learn**, known for its scalability and efficiency [3], [4].
