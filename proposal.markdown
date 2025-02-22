@@ -68,7 +68,7 @@ Based on the template on the class website, here is the contribution table:
 | Aryeman Singh                | GitHub Pages, Problem Definition, Motivation  |
 | Sameer Arora                 | Introduction, Methods, Discussion, References |
 | Naman Goyal                  | Video Recording, Video Creation               |
-| Sanjay Lokkit Babu Narayanan | Methods, Presentation, Potential Dataset      |
+| Lokkit Sanjay Babu Narayanan | Methods, Presentation, Potential Dataset      |
 | Aryika Kumar                 | Gantt Chart, Results, Presentation            |
 
 
