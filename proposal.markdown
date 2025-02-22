@@ -53,13 +53,14 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
 [4] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” _PLOS ONE_, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762
 
 ---   
-- **Gantt Chart**: 
+## Other
+### Gantt Chart
 [**Full Gantt Chart**](https://gtvault-my.sharepoint.com/:x:/g/personal/akumar906_gatech_edu/EXJc6ihn5flFu38MAn05b_4BXmzhr109P-YNltiuoURhIg?e=5WeXAZ)
 
-<img width="338" alt="Screenshot 2025-02-21 at 5 06 18 PM" src="https://github.com/user-attachments/assets/ed6d20b4-1640-4a3d-be48-236dd2529874" />
+<img width="400" alt="Screenshot 2025-02-21 at 5 06 18 PM" src="https://github.com/user-attachments/assets/ed6d20b4-1640-4a3d-be48-236dd2529874" />
 
 
-- **Contribution Table**: list all group members’ names and explicit contributions in preparing the proposal using the format below.
+### Contribution Table
 
      | Name    | Proposal Contributions |
      |---------|------------------------|
@@ -70,9 +71,9 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
      | Sanjay Lokkit Babu Narayanan | Methods, Presentation, Potential Dataset |
 
 
-2. **Video Presentation**  
+### Video Presentation
    - 
 
-3. **GitHub Repository**  
+### GitHub Repository
    - 
 
