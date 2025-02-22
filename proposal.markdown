@@ -65,9 +65,9 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
      |---------|------------------------|
      | Naman Goyal | Video Recording, Video Creation |
      | Aryeman Singh | GitHub Pages, Problem Definition, Motivation |
-     | Sameer Arora  | Introduction, Methods, References, Potential Dataset |
+     | Sameer Arora  | Introduction, Methods, Discussion, References |
      | Aryika Kumar | Gantt Chart, Results, Presentation |
-     | Sanjay Lokkit Babu Narayanan | Methods, Presentation |
+     | Sanjay Lokkit Babu Narayanan | Methods, Presentation, Potential Dataset |
 
 
 2. **Video Presentation**  
