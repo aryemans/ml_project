@@ -57,7 +57,6 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
 ### Gantt Chart
 [**Full Gantt Chart**](https://gtvault-my.sharepoint.com/:x:/g/personal/akumar906_gatech_edu/EXJc6ihn5flFu38MAn05b_4BXmzhr109P-YNltiuoURhIg?e=5WeXAZ)
 
-<img width="400" alt="Screenshot 2025-02-21 at 5 06 18 PM" src="https://github.com/user-attachments/assets/ed6d20b4-1640-4a3d-be48-236dd2529874" />
 
 
 ### Contribution Table
@@ -67,7 +66,7 @@ Based on the template on the class website, here is the contribution table:
 | :--------------------------- | :-------------------------------------------- |
 | Aryeman Singh                | GitHub Pages, Problem Definition, Motivation  |
 | Sameer Arora                 | Introduction, Methods, Discussion, References |
-| Naman Goyal                  | Video Recording, Video Creation               |
+| Naman Goyal                  | Video Recording, Video Creation, Gantt Chart  |
 | Lokkit Sanjay Babu Narayanan | Methods, Presentation, Potential Dataset      |
 | Aryika Kumar                 | Gantt Chart, Results, Presentation            |
 
