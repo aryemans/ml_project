@@ -71,7 +71,7 @@ Based on the template on the class website, here is the contribution table:
 | Aryika Kumar                 | Gantt Chart, Results, Presentation            |
 
 
-### [Video Presentation](https://youtu.be/p5pqXeXo_5k)
+### [Video Presentation](https://youtu.be/u4IGOzryK2A)
 
 ### [GitHub Repository](https://github.gatech.edu/asingh899/ml_project_43/)
 
