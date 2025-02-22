@@ -5,7 +5,7 @@ permalink: /proposal
 ---
 ## Introduction/Background
 
-Text classification is a supervised learning task to categorize textual data, with applications across various domains. This study focuses on classifying machine learning research abstracts based on research area and methodology. Prior work highlights effective models such as Support Vector Machines, Decision Trees, and Naïve Bayes, which, when trained on well-defined textual features provided from pre-processing methods such as stemming, TF-IDF, and bag-of-words can provide robust classification [1]–[4]. 
+Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on research area and methodology. Prior work highlights effective models such as **Support Vector Machines**, **Decision Trees**, and **Naïve Bayes**, which, when trained on well-defined textual features provided from pre-processing methods such as TF-IDF and bag-of-words can provide robust classification [1]–[4]. 
 
 To evaluate classification accuracy, this study will test machine learning models on **Introduction** and **Conclusion** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
 
@@ -14,6 +14,8 @@ As the world of machine learning focused research expands, gathering relevant li
 
 ## Methods
 ### Data-Pre-Processing Methods
+We will be labeling a set of research papers from [**Papers with Code**](https://paperswithcode.com/) and splitting our data into 80% for training and 20% for metric evaluation. 
+
 To improve classification accuracy, the following preprocessing steps will be applied using **NLTK** and **scikit-learn**. 
 
 Text normalization and tokenization refine the text by lowercasing words, expanding contractions, and splitting text into meaningful units. Lemmatization reduces words to their base forms, and stopword removal eliminates non-informative words [2]. This will be done using NLTK's **word_tokenize()**, **WordNetLemmatizer**, and **stopwords** module. 
@@ -23,35 +25,32 @@ Feature extraction techniques such as **bag-of-words** and **TF-IDF** with **sci
 To improve semantic understanding, **BERT-based embeddings** via **Hugging Face's transformers library** generate dense vector representations, capturing contextual meaning beyond word frequency [1]. 
 
 ### Classification Models
-Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification:
+Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification.
 
 Naïve Bayes (NB), implemented via **MultinomialNB** in **scikit-learn**, is a probabilistic classifier that assumes feature independence, enabling efficient training and scalability [3], [4]. 
 
 Support Vector Machines (SVM), using **SVC** from **scikit-learn**, construct hyperplanes for binary classification and leverage kernel functions to handle high-dimensional spaces effectively [1], [4]. 
 
-Random Forest (RF), implemented with **RandomForestClassifier** in **scikit-learn**, aggregates multiple decision trees for classification but requires careful tuning to balance computation time and overfitting risk [1], [4].
+Random Forest, implemented with **RandomForestClassifier** in **scikit-learn**, aggregates multiple decision trees for classification but requires careful tuning to balance computation time and overfitting risk [1], [4].
 
-### 4. (Potential) Results and Discussion
+## Results and Discussion
+#### Metrics
+To assess model performance, we will use accuracy, precision, recall, and F1-score. Accuracy measures the proportion of correct predictions among total predictions. Precision evaluates how many of the predicted **positive** classifications were actually correct. Recall measures the proportion of actual positives correctly classified. F1-score balances precision and recall, particularly useful when handling imbalanced datasets.
 
-- **Metrics**
-We employ multi-class classification to evaluate model performance. The macro-F1 score averages the F1 score for each class, ensuring our results are precise in cases of imbalanced datasets. The weighted F1 score accounts for the imbalance of each class and weights them accordingly, providing a more realistic metric. A confusion matrix reveals misclassifications patterns and biases towards majority classes. Additionally, we will use precision which indicates how often a model is correct, accuracy which is overall correctness, and recall. For regression metrics, we will use R-squared which measures explained variance and mean square error which tells us the prediction error. 
+#### Project Goals
+We hope to identify which classification models are the most accurate and have the highest F-1 score. The project also considers sustainability and ethical considerations, aiming to find a computationally efficient model that minimizes mis-categorization and overrepresentation of dominant research fields. 
 
-- **Project Goals** 
-Our goal is to identify which model performs the best for classifying the introductions and conclusions by assessing performance, sustainability, and ethical consequences. We will measure performance using our metrics and compare computational costs across different models. Ethical concerns include minimizing bias to prevent overrepresentation of dominant research fields.
+#### Expected Results
+We expect SVM to perform the best in accuracy and F1 Score due to its suitability for high dimensional text classification [3]. Naïve Bayes will offer strong results for smaller text but might struggle with complexity and will likely be the most resource-efficient [4]. Random Forest may overfit but offers interpretability and potential for high accuracy [1].
 
-- **Expected Results**
-We expect logistic regression to perform the best in accuracy and F1 Score due to its suitability for high dimensional text classification. Naive Bayes will offer strong results for smaller text but might struggle with complexity and will likely be the most resource-efficient. Decision Trees may overfit but offers interpretability.  
+## References
+[1] A. Gasparetto, M. Marcuzzo, A. Zangari, and A. Albarelli, “A survey on text classification algorithms: From text to predictions,” _Information_, vol. 13, no. 2, Feb. 2022. doi:10.3390/info13020083
 
----
+[2] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” _Mining Text Data_, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6
 
-### 5. References
-[1] A. Gasparetto, M. Marcuzzo, A. Zangari, and A. Albarelli, “A survey on text classification algorithms: From text to predictions,” Information, vol. 13, no. 2, Feb. 2022. doi:10.3390/info13020083
+[3] I. Dawar, N. Kumar, S. Negi, S. Pathan, and S. Layek, “Text categorization using supervised machine learning techniques,” _2023 Sixth International Conference of Women in Data Science at Prince Sultan University (WiDS PSU)_, Mar. 2023. doi:10.1109/wids-psu57071.2023.00046
 
-[2] C. C. Aggarwal and C. Zhai, “A survey of text classification algorithms,” Mining Text Data, pp. 163–222, 2012. doi:10.1007/978-1-4614-3223-4_6
-
-[3] I. Dawar, N. Kumar, S. Negi, S. Pathan, and S. Layek, “Text categorization using supervised machine learning techniques,” 2023 Sixth International Conference of Women in Data Science at Prince Sultan University (WiDS PSU), Mar. 2023. doi:10.1109/wids-psu57071.2023.00046
-
-[4] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” PLOS ONE, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762
+[4] K. Shyrokykh, M. Girnyk, and L. Dellmuth, “Short text classification with machine learning in the Social Sciences: The case of climate change on Twitter,” _PLOS ONE_, vol. 18, no. 9, Sep. 2023. doi:10.1371/journal.pone.0290762
 
 ---   
 - **Gantt Chart**: 
