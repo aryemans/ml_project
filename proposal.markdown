@@ -61,7 +61,7 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
 
 
 ### Contribution Table
-
+Based on the template on the class website, here is the contribution table:
      | Name    | Proposal Contributions |
      |---------|------------------------|
      | Naman Goyal | Video Recording, Video Creation |
