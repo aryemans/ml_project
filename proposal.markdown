@@ -62,13 +62,14 @@ We expect SVM to perform the best in accuracy and F1 Score due to its suitabilit
 
 ### Contribution Table
 Based on the template on the class website, here is the contribution table:
-     | Name    | Proposal Contributions |
-     |---------|------------------------|
-     | Naman Goyal | Video Recording, Video Creation |
-     | Aryeman Singh | GitHub Pages, Problem Definition, Motivation |
-     | Sameer Arora  | Introduction, Methods, Discussion, References |
-     | Aryika Kumar | Gantt Chart, Results, Presentation |
-     | Sanjay Lokkit Babu Narayanan | Methods, Presentation, Potential Dataset |
+
+| Name                         | Proposal Contributions                        |
+| :--------------------------- | :-------------------------------------------- |
+| Aryeman Singh                | GitHub Pages, Problem Definition, Motivation  |
+| Sameer Arora                 | Introduction, Methods, Discussion, References |
+| Naman Goyal                  | Video Recording, Video Creation               |
+| Sanjay Lokkit Babu Narayanan | Methods, Presentation, Potential Dataset      |
+| Aryika Kumar                 | Gantt Chart, Results, Presentation            |
 
 
 ### Video Presentation
