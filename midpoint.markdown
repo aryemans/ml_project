@@ -79,7 +79,7 @@ Since macro F1 weighs all classes equally, this visualization reveals how rare o
 
 #### ROC Curves per Class
 ![Label Frequency](/assets/roc.png)
-Helps assess class separability. AUC values close to 1.0 (like for "RNN-based") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
+Helps assess class separability. AUC values close to 1.0 (like for "Q-Learning") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
 ### Analysis of Algorithm(s)/Model(s)
 
 Our model exhibited several strengths that contributed to its moderate success. By leveraging high-quality semantic representations from BERT, the model was able to understand the meaning and context of each paper, going beyond simple keyword matching. The use of class-specific threshold optimization allowed it to better handle imbalanced class distributions and F1 performance. Additionally, the interpretability of logistic regression helped us analyze and understand which dimensions in the embedding space contributed to each prediction and enabled us to further tweak our model's pipeline. 
