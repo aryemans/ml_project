@@ -3,7 +3,7 @@ layout: page
 title: Midpoint Checkpoint
 permalink: /midpoint
 ---
-## Introduction/Background
+## Introduction/Background## Introduction/Background
 
 Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Support Vector Machines**, **Decision Trees**, and **Naïve Bayes**, which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
 
@@ -43,26 +43,6 @@ Each paper's introduction and conclusion is encoded into a 768-dimensional BERT 
 
 This method was selected for its simplicity, interpretability, and effectiveness when paired with high-quality embeddings like BERT. for its simplicity, interpretability, and effectiveness when paired with high-quality embeddings like BERT.
 
-### OLD **Classification Models**
-**Once high-dimensional representations of text are generated, the following machine learning models will be tested for classification.**
-
-**Naïve Bayes (NB), implemented via MultinomialNB in scikit-learn, is a probabilistic classifier that assumes feature independence, enabling efficient training and scalability [3], [4].** 
-
-**Support Vector Machines (SVM), using SVC from scikit-learn, construct hyperplanes for binary classification and leverage kernel functions to handle high-dimensional spaces effectively [1], [4].** 
-
-**Random Forest, implemented with RandomForestClassifier in scikit-learn, aggregates multiple decision trees for classification but requires careful tuning to balance computation time and overfitting risk [1], [4].**
-
-## OLD**Results and Discussion**
-#### **Metrics**
-**To assess model performance, we will use accuracy, precision, recall, and F1-score. Accuracy measures the proportion of correct predictions among total predictions. Precision evaluates how many of the predicted positive classifications were actually correct. Recall measures the proportion of actual positives correctly classified. F1-score balances precision and recall, particularly useful when handling imbalanced datasets.**
-
-#### **Project Goals**
-**We hope to identify which classification models are the most accurate and have the highest F-1 score. The project also considers sustainability and ethical considerations, aiming to find a computationally efficient model that minimizes mis-categorization and overrepresentation of dominant research fields.** 
-
-#### **Expected Results**
-**We expect SVM to perform the best in accuracy and F1 Score due to its suitability for high dimensional text classification [3]. Naïve Bayes will offer strong results for smaller text but might struggle with complexity and will likely be the most resource-efficient [4]. Random Forest may overfit but offers interpretability and potential for high accuracy [1].**
-
-
 ## Results and Discussion
 ### Quantitative Metrics
 
@@ -72,13 +52,41 @@ This method was selected for its simplicity, interpretability, and effectiveness
 | Hamming Loss         | **0.0679** |
 | F1 Score (Micro)     | **0.5975** |
 | F1 Score (Macro)     | **0.6395** |
+
 These scores indicate a moderate overall performance. 39% of test samples had all predicted labels exactly correct and only 6.8% of the label entries were wrong. Our F1 Micro assumes we treat each prediction equally and understand the overall ability to make correct label predictions—about 60% of (label, sample) pairs were precise and complete. F1 macro is especially important for imbalanced datasets and treats each class equally. This metric showed strong results at ~64%. This suggests that our model handles rare classes reasonably well. 
 ### Visualization
 #### EDA Visualizations
+##### Label Frequency
 
 ![Label Frequency](/assets/label-frequency.png)
-#### Model Visualizations
+Conducting this visualization opened our eyes to the possibility of bias in the model due to imbalanced data, which is why when we trained our Logistic Regression model, we used the `class_weight` hyperparameter to balance the weight of each class.
 
+##### HDBSCAN Clustering on UMAP Embeddings
+![Label Frequency](/assets/hdbscan-umap.png)
+This 2D visualization consisted of dimensionality reduction (UMAP) and conduct density-based clustering (HDBSCAN). We leveraged this visualization to understand the label space and ascertain insight into our corpus. The resulting clustering suggests that papers with similar semantic content are naturally grouped together in the embedding space, validating the idea that BERT embeddings capture deeper topical signals from the text. 
+
+![Label Frequency](/assets/comparison.png)
+We compared this visualized to t-SNE and PCA to find which preserved a relevant global and local structure, so as to not distort our clusterings by other linear or non-linear dimensionality reduction techniques. 
+
+#### Model Visualizations
+##### Per-Class F1 vs. Threshold
+![Label Frequency](/assets/per-class-f1-score.png)
+Visualizing the Per-Class F1 vs. Threshold illuminates the optimal threshold for each class that maximized F1. We use this visualization to evaluate individual class performance for each label individually. In our plot, some classes (like "Transformer-based") peak around 0.6–0.7, while others (like "Object Detection") perform best at much lower thresholds. This tells us that a single threshold across all classes would underperform—class-specific tuning is crucial and will be included in our next steps. 
+##### Impact on Global Micro F1
+![Label Frequency](/assets/impact-micro-F1.png)
+In conjunction with the previous visualization, this plot indicates which classes have a disproportionate affect on the overall model performance (the previous visualization illuminates the thresholds we may tune—this visualization portrays the impact of tuning each one of those thresholds). This impact may potentially be due to a class' frequency or correlation with other labels. 
+
+---
+
+##### Macro F1 vs Per-Class Threshold
+![Label Frequency](/assets/macro-f1-per-class.png)
+Since macro F1 weighs all classes equally, this visualization reveals how rare or poorly performing labels influence fairness across the label space. We observed that tuning thresholds for low-frequency classes (like "Object Detection") causes sharper shifts in macro F1 than common ones — helpful for diagnosing imbalance.
+
+---
+
+##### ROC Curves per Class
+![Label Frequency](/assets/roc.png)
+Helps assess class separability. AUC values close to 1.0 (like for "RNN-based") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
 ### Analysis of 1+ Algorithm(s)/Model(s)
 ### Next Steps
 
