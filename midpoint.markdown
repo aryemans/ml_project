@@ -115,7 +115,7 @@ Based on the template on the class website, here is the contribution table:
 | Name                         | Proposal Contributions                                                          |
 | :--------------------------- | :------------------------------------------------------------------------------ |
 | Aryeman Singh                | Data Extraction & Pre-processing, Model Training, Gantt Chart, GitHub Pages     |
-| Sameer Arora                 | Data Extraction, Led Report Writing, GitHub Pages                               |
+| Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, GitHub Pages                               |
 | Naman Goyal                  | Helped with Report Writing, Led Feature Extraction, Model Training, Gantt Chart |
 | Lokkit Sanjay Babu Narayanan | Feature Extraction, Model Training                                              |
 | Aryika Kumar                 | Feature Extraction, Model Training                                              |
