@@ -35,7 +35,7 @@ HDBSCAN discovered dense clusters of similar papers in the 2D UMAP space. This t
 Together, these models provided meaningful unsupervised insights into natural groupings in our corpus, validating semantic distinctions captured by BERT embeddings.
 
 #### Logistic Regression
-##### Logistic Regression with TF-IDF Features
+##### **Logistic Regression with TF-IDF Features**
 We implemented a multi-label Logistic Regression classifier using **sklearn**’s `LogisticRegression` module, wrapped in a `OneVsRestClassifier` to handle the multi-label nature of the task.
 
 The input features were constructed by applying **TF-IDF vectorization** to the combined abstract and result section of each research paper. The vectorizer was configured with the following hyperparameter—`max_features = 3000`.
@@ -50,7 +50,7 @@ The Logistic Regression classifier was initialized with:
 After training, the classifier’s predicted probabilities were passed through a **threshold optimization routine** to improve multi-label decision making. Each label’s threshold was individually tuned using grid search over the range [0.1, 0.9], selecting the value that maximized the average of F1-micro, F1-macro, and F1-weighted scores.
 
 This approach balances simplicity and interpretability with solid performance using sparse lexical features.
-##### Logistic Regression with BERT Embeddings
+##### **Logistic Regression with BERT Embeddings**
 
 We also implemented a Logistic Regression classifier using **768-dimensional BERT embeddings** as input features. These embeddings, precomputed from each paper’s abstract and result, capture rich semantic representations that go beyond surface-level word statistics.
 
@@ -78,7 +78,7 @@ The model was trained on the TF-IDF features and evaluated using F1-micro and F1
 
 This Naive Bayes approach provides a simple yet effective baseline for multi-label text classification and demonstrates reasonable performance when paired with carefully engineered keyword-based features and threshold tuning.
 #### Support Vector Machine (SVM)
-##### TF-IDF + LinearSVC (SVM)
+##### **TF-IDF + LinearSVC (SVM)**
 We implemented a multi-label Support Vector Machine classifier using **sklearn**’s **LinearSVC** in a One-vs-Rest (OvR) configuration. To enhance probabilistic interpretability, each binary classifier was calibrated using **CalibratedClassifierCV** with sigmoid scaling.
 
 The model pipeline starts by converting each paper's abstract and results into a sparse, high-dimensional TF-IDF vector with the following hyperparameters:  
@@ -93,7 +93,7 @@ A base LinearSVC classifier with `C = 1.0` and `max_iter = 10000` was wrapped in
 To handle the challenge of multi-label thresholding, we implemented a joint optimization routine using **scipy.optimize.minimize** (method: L-BFGS-B), tuning per-class probability thresholds to maximize a combined F1-micro and F1-macro score. This calibration enables the model to balance precision and recall across imbalanced labels.
 
 This method leverages the interpretability and speed of linear SVMs with the expressive power of TF-IDF features, offering an efficient and scalable approach for text-based multi-label classification.
-##### BERT Embeddings + LinearSVC (SVM)
+##### **BERT Embeddings + LinearSVC (SVM)**
 We also trained an SVM using dense 768-dimensional BERT embeddings for each paper. These embeddings encapsulate rich contextual semantics from the abstract and result sections, providing a deep representation of research content.
 
 We used **sklearn**’s **LinearSVC** for binary classification per label in a One-vs-Rest scheme, with key hyperparameters set to `C = 1.0` and `max_iter = 10000`. To account for class imbalance, we computed `class_weight='balanced'` individually for each label using **sklearn.utils.class_weight.compute_class_weight**, which was passed into the corresponding LinearSVC instance.
@@ -172,7 +172,7 @@ Lastly, we will be conducting a rigorous analysis where we will be examining the
 
 ---   
 ## Other
-### [Full Gantt Chart](https://gtvault-my.sharepoint.com/:x:/g/personal/akumar906_gatech_edu/EXJc6ihn5flFu38MAn05b_4BXmzhr109P-YNltiuoURhIg?e=5WeXAZ)
+### [Full Gantt Chart](https://gtvault-my.sharepoint.com/:x:/r/personal/akumar906_gatech_edu/_layouts/15/Doc.aspx?sourcedoc=%7B28EA5C72-E567-45F9-BB7F-0C027D396FFE%7D&file=ML%20GANTT%20CHART.xlsx&fromShare=true&action=default&mobileredirect=true)
 
 ### Contribution Table
 Based on the template on the class website, here is the contribution table:
