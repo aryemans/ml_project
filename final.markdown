@@ -7,7 +7,7 @@ permalink: /final
 
 Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Logistic Regression**, **Naïve Bayes**, and **Random Forest** which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
 
-To evaluate classification accuracy, this study will test machine learning models on **Introduction** and **Conclusion** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/) via their free, public API. These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
+To evaluate classification accuracy, this study will test machine learning models on **Abstract** and **Results** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/) via their free, public API (we previously used used the **Introduction** and **Conlusion** sections for NLP analysis, but based on feedback from Professor Roozbahani and Richard Koulen, as well as our own analysis into the best sections of the paper to use for classification). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
 
 ## Problem Definition
 As the world of machine learning focused research expands, gathering relevant literature for review within a specific domain gets increasingly difficult. Modern keyword matching techniques do not accurately capture deeper semantic meaning and context. As a result, our structured approach to classify machine learning research papers provides researchers with quick access to relevant papers and efficiently analyze their domain. 
@@ -15,13 +15,13 @@ As the world of machine learning focused research expands, gathering relevant li
 ## Methods
 
 ### Data Preprocessing Methods Implemented
-Our data collection contains two key steps—obtaining our `y-actual`, our labels that signify which ML algorithm/model is used by querying the **PapersWithCode** API, collecting each paper's methodology information, and translating them into vector formats. The other half of our data collection pertains to obtaining the text for the introduction and conclusion of each paper, from their PDF's, provided by the **PapersWithCode** API. This data enables our model to form the `y-predicted` labels, contextually labelling each paper with the models used in that paper. 
+Our data collection contains two key steps—obtaining our `y-actual`, our labels that signify which ML algorithm/model is used by querying the **PapersWithCode** API, collecting each paper's methodology information, and translating them into vector formats. The other half of our data collection pertains to obtaining the text for the abstract and results sections of each paper, from their PDF's, provided by the **PapersWithCode** API. This data enables our model to form the `y-predicted` labels, contextually labelling each paper with the models used in that paper. 
 
-In the files `PapersWithCodeAPICalling.ipynb` and `PDFProcessing.ipynb` under the `Data Extraction` directory, we complete these two main data collection steps and undergo the initial steps of our our **Data Transformation** and **Data Cleaning**. Here, we standardize the labels for each class / category possible, throw out papers that have malformed scans of the "Introduction "and "Conclusion" and ensure strictly the text from these two section is used (excluding "References," "Methods," etc.). We save all of this into a CSV which is fully stored in our `Datasets` directory, and as we use the CSV, we ensure that we split our 725 papers for 80% training and 20% testing. 
+In the files `PapersWithCodeAPICalling.ipynb` and `PDFProcessing.ipynb` under the `Data Extraction` directory, we complete these two main data collection steps and undergo the initial steps of our our **Data Transformation** and **Data Cleaning**. Here, we standardize the labels for each class / category possible, throw out papers that have malformed scans of the "Abstract "and "Results" and ensure strictly the text from these two section is used (excluding "References," "Methods," etc.). We save all of this into a CSV which is fully stored in our `Datasets` directory, and as we use the CSV, we ensure that we split our 725 papers for 80% training and 20% testing. 
 
 We conduct further data preprocessing in our `Feature Extraction` directory, under `Feature Extraction.ipynb`. To begin, we leverage **NLTK**'s **word_tokenize**, **WordNetLemmatizer**, and **stopwords** module for text normalization and tokenization to lowercase the words and remove punctuation, stopwords, and reference numbers of the format "[1]", "[2]", etc. After that, we call **PyTorch**'s transformers library to use **BertTokenizer**, **BertModel**, and **SentenceTransformer** to generate dense vector representations of each block of text and capture contextual meaning, based on the `all-mpnet-base-v2` embedding model. This enabled us to conduct multi-labelling of each paper with 14 general labels that portrays the ML models/algorithms used in that paper, such as "CNN-based," or "Logistic-Regression". 
 
-Next, we used a pretrained transformer-based language model, **PyTorch**'s **Sentence-BERT (all-mpnet-base-v2)**, to extract **768-dimensional sentence embeddings** for each paper's combined introduction & conclusion. These embeddings capture deep semantic meaning and were chosen due to their strong performance in semantic textual similarity tasks [3], [4]. 
+Next, we used a pretrained transformer-based language model, **PyTorch**'s **Sentence-BERT (all-mpnet-base-v2)**, to extract **768-dimensional sentence embeddings** for each paper's combined abstract & results. These embeddings capture deep semantic meaning and were chosen due to their strong performance in semantic textual similarity tasks [3], [4]. 
 ### Machine Learning Algorithms/Models Implemented
 
 #### Used for Exploratory Data Analysis
@@ -34,14 +34,79 @@ HDBSCAN discovered dense clusters of similar papers in the 2D UMAP space. This t
 
 Together, these models provided meaningful unsupervised insights into natural groupings in our corpus, validating semantic distinctions captured by BERT embeddings.
 
-#### Used for Paper Classification
-We implemented a Logistic Regression classifier in a One-vs-Rest (OvR) setting to perform multi-label classification over 14 potential categories.
+#### Logistic Regression
+##### Logistic Regression with TF-IDF Features
+We implemented a multi-label Logistic Regression classifier using **sklearn**’s `LogisticRegression` module, wrapped in a `OneVsRestClassifier` to handle the multi-label nature of the task.
 
-The details of the model include using **sklearn**'s **LogisticRegression** module with the following hyper-parameters: `C = 10.0` (a relatively small penalty term, allowing the model to fit the training data more closely but runs the risk of overfitting) (, `class_weight = 'balanced'` (to handle label imbalance), and `max_iter = 1000`.
+The input features were constructed by applying **TF-IDF vectorization** to the combined abstract and result section of each research paper. The vectorizer was configured with the following hyperparameter—`max_features = 3000`.
 
-Each paper's introduction and conclusion is encoded into a 768-dimensional BERT embedding that captures rich semantic features of the text—such as the research method, goal, and key findings. Logistic Regression then uses these numerical embeddings as input features to learn decision boundaries for each label. This allows the model to effectively distinguish between different machine learning categories based on meaning, rather than just surface-level word counts.
+This produces sparse, high-dimensional feature vectors that capture the importance of words and phrases across the corpus.
 
-This method was selected for its simplicity, interpretability, and effectiveness when paired with high-quality embeddings like BERT. for its simplicity, interpretability, and effectiveness when paired with high-quality embeddings like BERT.
+The Logistic Regression classifier was initialized with:  
+- `C = 10.0` (encouraging closer fits to the training data)  
+- `max_iter = 1000` (to ensure convergence)  
+- `class_weight = 'balanced'` (to correct for label imbalance)
+
+After training, the classifier’s predicted probabilities were passed through a **threshold optimization routine** to improve multi-label decision making. Each label’s threshold was individually tuned using grid search over the range [0.1, 0.9], selecting the value that maximized the average of F1-micro, F1-macro, and F1-weighted scores.
+
+This approach balances simplicity and interpretability with solid performance using sparse lexical features.
+##### Logistic Regression with BERT Embeddings
+
+We also implemented a Logistic Regression classifier using **768-dimensional BERT embeddings** as input features. These embeddings, precomputed from each paper’s abstract and result, capture rich semantic representations that go beyond surface-level word statistics.
+
+Similar to the TF-IDF pipeline, we used **sklearn**’s `LogisticRegression` in a `OneVsRestClassifier` setup, configured with:  
+- `C = 10.0`  
+- `max_iter = 1000`  
+- `class_weight = 'balanced'`  
+
+Prior to training, we removed "dead" labels (i.e., classes with no positive samples) to ensure numerical stability.
+
+Following training, a **per-class threshold optimization** was performed. Each class’s threshold was adjusted over a fine-grained grid [0.1, 0.9], optimizing for a combined F1 score across multiple averaging strategies (macro, micro, weighted). This process increased performance by tailoring the classification sensitivity for each label.
+
+This model benefits from the deep contextual signals encoded in BERT embeddings while maintaining the interpretability and scalability of linear classifiers.
+#### Naive Bayes with TF-IDF Features
+
+We implemented a Naive Bayes classifier using a **One-vs-Rest (OvR)** strategy to handle multi-label classification across 16 research categories. After receiving guidance on providing a baseline of our BERT-based models to show potential enhancement or shortcoming of leveraging semantic understanding via BERT, we decided to implement a Naive Bayes, TF-IDF-based model. 
+
+For input features, we applied **TF-IDF vectorization** to each paper’s abstract and results section after preprocessing. Preprocessing included tokenization, stopword removal, and lemmatization using **NLTK**, followed by transformation using **sklearn**’s `TfidfVectorizer` with the following configuration: `max_features = 175` (to not over-complicate the simple model) and `ngram_range = (1, 1)`.
+
+This setup captures unigram term importance while reducing the feature space for efficiency—so as to make it as close to a simple keyword-based classifier as possible.
+
+The classifier used was **sklearn**’s `MultinomialNB` wrapped in a `OneVsRestClassifier`, with: `alpha = 0.8` (to apply smoothing and prevent zero probabilities).
+
+The model was trained on the TF-IDF features and evaluated using F1-micro and F1-macro metrics. We further refined classification performance using a **threshold optimization** routine. For each class, the probability threshold was tuned in the range `[0.1, 0.9]` to maximize the average of F1-macro scores. This allowed the model to account for class imbalance and better control the decision boundary for each label.
+
+This Naive Bayes approach provides a simple yet effective baseline for multi-label text classification and demonstrates reasonable performance when paired with carefully engineered keyword-based features and threshold tuning.
+#### Support Vector Machine (SVM)
+##### TF-IDF + LinearSVC (SVM)
+We implemented a multi-label Support Vector Machine classifier using **sklearn**’s **LinearSVC** in a One-vs-Rest (OvR) configuration. To enhance probabilistic interpretability, each binary classifier was calibrated using **CalibratedClassifierCV** with sigmoid scaling.
+
+The model pipeline starts by converting each paper's abstract and results into a sparse, high-dimensional TF-IDF vector with the following hyperparameters:  
+- `max_features = 5000`  
+- `ngram_range = (1, 2)`  
+- `sublinear_tf = True`  
+
+This setup captures unigram and bigram phrases while reducing the influence of high-frequency terms.
+
+A base LinearSVC classifier with `C = 1.0` and `max_iter = 10000` was wrapped in an OvR strategy to allow independent binary classifiers per label. Each classifier’s output was then passed through a sigmoid calibration layer (`cv='prefit'`) to produce probability scores.
+
+To handle the challenge of multi-label thresholding, we implemented a joint optimization routine using **scipy.optimize.minimize** (method: L-BFGS-B), tuning per-class probability thresholds to maximize a combined F1-micro and F1-macro score. This calibration enables the model to balance precision and recall across imbalanced labels.
+
+This method leverages the interpretability and speed of linear SVMs with the expressive power of TF-IDF features, offering an efficient and scalable approach for text-based multi-label classification.
+##### BERT Embeddings + LinearSVC (SVM)
+We also trained an SVM using dense 768-dimensional BERT embeddings for each paper. These embeddings encapsulate rich contextual semantics from the abstract and result sections, providing a deep representation of research content.
+
+We used **sklearn**’s **LinearSVC** for binary classification per label in a One-vs-Rest scheme, with key hyperparameters set to `C = 1.0` and `max_iter = 10000`. To account for class imbalance, we computed `class_weight='balanced'` individually for each label using **sklearn.utils.class_weight.compute_class_weight**, which was passed into the corresponding LinearSVC instance.
+
+As with the TF-IDF model, each binary classifier was calibrated using **CalibratedClassifierCV** (`method='sigmoid'`, `cv='prefit'`) to produce reliable probability estimates.
+
+Finally, threshold optimization was performed across all 16 labels using the same L-BFGS-B procedure as above, jointly maximizing F1-micro and F1-macro scores.
+
+The combination of BERT’s semantic richness with a linear classifier and optimized per-label thresholds yielded significantly improved multi-label classification performance—particularly in terms of F1 scores—compared to sparse input representations.
+
+#### Multilayer Perceptron
+COMPLETE ONCE WE FIND THE MLP JUPYTER NOTEBOOK
+
 ## Results and Discussion
 ### Quantitative Metrics
 
