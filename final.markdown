@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Midpoint Checkpoint
+title: Final Report
 permalink: /final
 ---
 ## Introduction/Background
