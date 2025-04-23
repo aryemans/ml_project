@@ -249,12 +249,31 @@ The macro F1 plot demonstrates that performance remains fairly stable across dif
 The micro F1 plot reinforces the stability observed in macro F1. Most classes remain between 0.68 and 0.70 across the full threshold range, with minimal fluctuation. This smooth behavior suggests the Deep MLP is well-calibrated on the frequent classes and does not overly rely on threshold sensitivity to achieve high performance. The model’s generalization is likely driven by its ability to learn nonlinear relationships from the BERT embeddings used as input.
 ### Analysis of Algorithm(s)/Model(s)
 #### Logistic Regression
+Logistic Regression demonstrated consistent and interpretable performance, particularly when paired with BERT embeddings. The TF-IDF variant achieved moderate scores (Exact Match Accuracy: 48.6%, Micro F1: 66.5%), reflecting its reliance on surface-level token frequency. While sufficient for common labels, this model struggled to generalize across imbalanced classes, as evidenced by its lower Macro F1 score (47.9%).
 
+In contrast, the BERT-based Logistic Regression model significantly outperformed its sparse counterpart. With an Exact Match Accuracy of 59.4% and a Micro F1 of 72.9%, it leveraged the deep semantic signals captured by contextual embeddings to better identify both frequent and rare labels. The relatively high Macro F1 (55.5%) further indicates improved fairness across classes. This result reinforces the value of semantic representation, even within linear classifiers.
+
+The combination of calibrated thresholds and semantic input enabled this model to strike a balance between interpretability and expressiveness, making it one of the strongest linear baselines.
 #### Support Vector Machine (SVM)
+The SVM models exhibited mixed results, with substantial improvements observed when transitioning from TF-IDF to BERT embeddings. The TF-IDF-based SVM yielded the weakest overall performance (Exact Match Accuracy: 22.5%, Micro F1: 34.4%), revealing the limitations of sparse, high-dimensional representations and rigid decision boundaries in handling nuanced textual data.
 
+By contrast, the BERT-augmented SVM showed notable improvements across all metrics—Exact Match Accuracy rose to 39.1%, and Micro F1 climbed to 55.4%. However, despite the richer input, the model’s performance remained volatile. Both Macro F1 (40.6%) and threshold sensitivity visualizations suggested unstable generalization across infrequent labels. These shortcomings likely stem from the SVM’s hard-margin nature, which does not naturally lend itself to probabilistic calibration or flexible multi-label separation.
+
+Therefore, while the BERT SVM benefits from better features, it falls short of the consistency observed in the MLP or Logistic Regression due to its architectural rigidity.
 #### Naive Bayes
+The Naive Bayes model served as an efficient and interpretable baseline. With TF-IDF input restricted to unigrams and a limited feature space (max_features=175), the model achieved modest results (Micro F1: 61.0%, Macro F1: 38.5%). These outcomes illustrate its strength in capturing dominant label patterns while struggling with sparse classes, as reflected in its comparatively low Macro F1.
+
+The ROC curve analysis revealed high separability for well-defined classes (e.g., “SVM,” “Logistic Regression”), but poor confidence on labels with overlapping or ambiguous terms (e.g., “Object Detection”). Its performance was also highly sensitive to threshold tuning, further affirming its limited robustness in a complex, imbalanced multi-label setting.
+
+Despite its simplicity, the model highlighted the challenge of relying purely on lexical indicators (like keywords), reinforcing the need for semantic augmentation in future iterations.
 
 #### Deep Multilayer Perceptron
+The BERT-based Deep MLP was the most performant model across all metrics. With an Exact Match Accuracy of 57.97%, Micro F1 of 67.54%, and a standout Macro F1 of 76.39%, this model demonstrated the strongest capacity to generalize across both frequent and rare classes.
+
+The architecture’s depth, coupled with nonlinear activations and dropout regularization, enabled it to model complex interactions within the high-dimensional BERT embeddings. The remarkably high Macro F1 score signifies its strength in treating all classes equitably, a vital trait in imbalanced multi-label tasks.
+
+Moreover, visualizations of F1 stability across thresholds emphasized the MLP’s calibration and resilience. Its ability to maintain consistent performance without aggressive tuning sets it apart as the most adaptable and generalizable model in the study.
+
 ### Comparison of Models
 ![Model Comparison Plot](/assets/model-comparison.png)
 The performance comparison across models underscores the central takeaway of this study: contextual embeddings derived from transformer-based models substantially outperform traditional keyword-based approaches in the multi-label classification of ML research papers. As shown in our model comparison chart, BERT-based models demonstrate clear superiority across all four evaluation metrics—**Exact Match Accuracy**, **Hamming Loss**, **F1 Score (Micro)**, and **F1 Score (Macro)**—compared to their TF-IDF-based counterparts.
@@ -267,15 +286,13 @@ In contrast, models using TF-IDF features underperformed. The **SVM (TF-IDF)** m
 
 These results validate the use of **semantic embedding techniques** in scientific document classification. By incorporating BERT-based embeddings and structuring the classification task around the abstract and results sections, our models were able to better capture the methodological essence of research papers. These findings emphasize the importance of leveraging contextualized representations and more expressive model architectures in automated literature analysis tasks.
 ### Next Steps
-For this model, we may proceed with  fine-tuning BERT directly for our classification task at-hand.
+A key limitation of our current pipeline is the lack of **fine-tuning** on the BERT model. While the pre-trained embeddings provided strong performance, they were generated without adaptation to our specific task. As a result, semantically similar ML terms (e.g., "Transformer-based" vs. "CNN-based") may lie close in BERT’s vector space, making them harder to distinguish in a classification setting. Fine-tuning the transformer on our labeled dataset would likely improve label separation and classification accuracy by aligning the embedding space more directly with our target labels.
 
-In regards to other models, we want to explore the possibility of leveraging **Naive Bayes** to compare its efficacy to that of the **Logistic Regression** model. In an effort to make Naive Bayes compatible with our BERT embeddings, in order to capture semantic meaning in our models' classifications, we will extract and engineer features that make our embedding data compatible with Naive Bayes.
+However, full fine-tuning would require significant time and computational resources, including training infrastructure, layer freezing strategies, and careful hyperparameter tuning—making it infeasible within our project scope.
 
-Other avenues we will be exploring is similarly leveraging **Random Forest** in a way that is compatible with our BERT embeddings, so as to capture semantic meaning and continue in our pursuit to learn more about models that can label text-based data. 
+In future work, we recommend incorporating task-specific fine-tuning of BERT, or lightweight alternatives like adapter layers or prompt tuning, to further leverage the power of contextual embeddings. Additionally, expanding the dataset would help mitigate class imbalance and improve generalization—particularly for rare or low-frequency labels, which consistently underperformed across models.
 
-A key aspect of our building of these models include the cognizance of the multi-labelling task we have at-hand. Incorporating software to handle these cases will look different for each model—for logistic regression, we had to experiment with threshold (which we will similarly have to do for Naive Bayes), and for random forest, we will have to analyze an extra classifier for each class that posits the question of "*reject* or *accept*". 
-
-Lastly, we will be conducting a rigorous analysis where we will be examining the shortcomings of  and the particular strengths of each model. We will also conduct our own testing to illuminate the presence of an semantic understanding of text in each model, rather than just fancy keyword-matching, through a variety of techniques (like artificial data poisoning). Crucially, we will also validate our analysis with more metrics, due to the unique task of multi-labelling that we conduct with our research.
+Together, fine-tuning and increased data would allow for better label discrimination, improved calibration, and stronger performance in multi-label classification of scientific text.
 
 ## References
 [1] A. Gasparetto, M. Marcuzzo, A. Zangari, and A. Albarelli, “A survey on text classification algorithms: From text to predictions,” _Information_, vol. 13, no. 2, Feb. 2022. doi:10.3390/info13020083
