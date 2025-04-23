@@ -249,9 +249,6 @@ The macro F1 plot demonstrates that performance remains fairly stable across dif
 The micro F1 plot reinforces the stability observed in macro F1. Most classes remain between 0.68 and 0.70 across the full threshold range, with minimal fluctuation. This smooth behavior suggests the Deep MLP is well-calibrated on the frequent classes and does not overly rely on threshold sensitivity to achieve high performance. The model’s generalization is likely driven by its ability to learn nonlinear relationships from the BERT embeddings used as input.
 ### Analysis of Algorithm(s)/Model(s)
 #### Logistic Regression
-Our model exhibited several strengths that contributed to its moderate success. By leveraging high-quality semantic representations from BERT, the model was able to understand the meaning and context of each paper, going beyond simple keyword matching. The use of class-specific threshold optimization allowed it to better handle imbalanced class distributions and F1 performance. Additionally, the interpretability of logistic regression helped us analyze and understand which dimensions in the embedding space contributed to each prediction and enabled us to further tweak our model's pipeline. 
-
-However, the model also faced some limitations. The dataset contained significant class imbalance, with some categories such as 'Object Detection' having very few examples, making them difficult to learn reliably. Logistic regression, being a linear model, may not capture complex, nonlinear relationships present in the BERT embeddings. Furthermore, the BERT embeddings used were frozen and not fine-tuned on our specific dataset, which limits their ability to adapt to domain-specific subtleties. Finally, since the One-vs-Rest approach treats each label independently, it does not take advantage of correlations and co-occurrence patterns among labels that could potentially enhance prediction accuracy.
 
 #### Support Vector Machine (SVM)
 
@@ -296,13 +293,13 @@ Lastly, we will be conducting a rigorous analysis where we will be examining the
 ### Contribution Table
 Based on the template on the class website, here is the contribution table:
 
-| Name                         | Proposal Contributions                                                          |
-| :--------------------------- | :------------------------------------------------------------------------------ |
-| Aryeman Singh                | Data Extraction & Pre-processing, Model Training, Gantt Chart, GitHub Pages     |
-| Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, GitHub Pages              |
-| Naman Goyal                  | Helped with Report Writing, Led Feature Extraction, Model Training, Gantt Chart |
-| Lokkit Sanjay Babu Narayanan | Feature Extraction, Model Training                                              |
-| Aryika Kumar                 | Feature Extraction, Model Training                                              |
+| Name                         | Proposal Contributions                                                                                                  |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| Aryeman Singh                | Data Extraction & Pre-processing, Model Training, Gantt Chart, GitHub Pages                                             |
+| Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, Led Results Analysis, Led Comparison of the Models, GitHub Pages  |
+| Naman Goyal                  | Helped with Report Writing, Led Feature Extraction, Model Training, Gantt Chart Organization, Exploratory Data Analysis |
+| Lokkit Sanjay Babu Narayanan | Feature Extraction, Model Training, Visualization Production / Results Analysis                                         |
+| Aryika Kumar                 | Feature Extraction, Model Training, Visualization Production / Results Analysis                                         |
 
 
 ### [GitHub Repository](https://github.gatech.edu/asingh899/ml_project_43/)
