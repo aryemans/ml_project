@@ -146,6 +146,7 @@ Since macro F1 weighs all classes equally, this visualization reveals how rare o
 ![Label Frequency](/assets/roc.png)
 Helps assess class separability. AUC values close to 1.0 (like for "Q-Learning") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
 
+#### Naive Bayes
 #### ROC Curves per Class (Naïve Bayes)
 The ROC curves for Naïve Bayes highlight its ability to distinguish individual classes. Most classes achieve strong separability with AUC scores above 0.85, such as Class 11 (AUC = 0.96) and Class 6 (AUC = 0.95), indicating high classifier confidence for those labels. However, Class 7 presents a significantly flatter curve (AUC = 0.48), suggesting challenges in distinguishing that label from others. These curves reveal that while Naïve Bayes is effective for certain classes, it may struggle on labels with overlapping features or lower representation in the training set.
 
@@ -155,6 +156,7 @@ The Macro F1 plot evaluates fairness across all classes by weighing each class e
 #### Impact on Global Micro F1 (Naïve Bayes)
 This plot shows how adjusting the classification threshold for each class affects the global Micro F1 score. Notably, Naïve Bayes achieves its peak Micro F1 performance at lower thresholds (~0.1–0.2), especially for classes like Class 5 and Class 10. As thresholds increase, performance consistently drops for nearly all classes, emphasizing the model’s preference for more lenient classification boundaries. This trend suggests that optimizing performance under Naïve Bayes requires favoring recall, particularly for more dominant or frequent classes.
 
+#### LinearSVC
 #### ROC Curves per Class (BERT + LinearSVC)
 The ROC curves indicate modest separability across most classes, with AUC scores hovering between 0.65 and 0.76 for the majority of labels. For instance, Class 1 (AUC = 0.76) and Class 11 (AUC = 0.75) show relatively strong discrimination, while others like Class 6 (AUC = 0.59) and Class 12 (AUC = 0.57) reflect weaker classifier confidence. Unlike more probabilistic models, the decision boundaries here may be constrained by the hard-margin nature of SVMs, suggesting a need for richer feature representations or additional calibration to improve separation.
 
@@ -164,6 +166,7 @@ This plot shows erratic variation in macro F1 across thresholds, which may refle
 #### Impact on Global Micro F1 (BERT + LinearSVC)
 Similar to the macro F1 curve, the micro F1 plot for BERT + LinearSVC is highly variable across thresholds. Despite a few peaks around 0.2–0.4 for classes like Class 3 and Class 11, the lack of a clear, sustained improvement region reveals that the model may not be consistently leveraging class weights effectively. The unstable performance may stem from class-wise decision boundary sensitivity or the challenge of mapping SVM decision scores to probabilities. Smoothing predictions or integrating Platt scaling could help mitigate this effect.
 
+#### Deep MLP
 #### ROC Curves per Class (Deep MLP)
 The ROC curves for the Deep MLP model indicate strong class separability, with nearly all AUC values exceeding 0.90. Notably, Class 2 and Class 10 achieve perfect discrimination (AUC = 1.00), while Class 0 and Class 15 also perform extremely well (AUC = 0.99). However, a few classes like Class 9 (AUC = 0.66) and Class 13 (AUC = 0.84) show less confident separation, likely due to overlapping feature distributions or lower representation. Overall, the Deep MLP exhibits robust class-wise confidence, suggesting high representational capacity and learning ability.
 
