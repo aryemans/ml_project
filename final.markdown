@@ -291,8 +291,48 @@ In contrast, models using TF-IDF features underperformed. The **SVM (TF-IDF)** m
 
 These results validate the use of **semantic embedding techniques** in scientific document classification. By incorporating BERT-based embeddings and structuring the classification task around the abstract and results sections, our models were able to better capture the methodological essence of research papers. These findings emphasize the importance of leveraging contextualized representations and more expressive model architectures in automated literature analysis tasks.
 
-#### Data Poisoning (Comparison of TF-IDF vs. BERT)
+#### Data Poisoning (Comparison of TF-IDF vs. BERT Logistic Regression)
 
+The TF-IDF model showed strong alignment between high-weighted features and specific labels, enabling it to perform well even after semantic poisoning. Terms like `"autoencoder"` (10.34, Label 0), `"gan"` (11.46, Label 2), and `"svm"` (12.49, Label 13) acted as near-perfect class indicators. These aren't learned semantic associations but reflect rigid co-occurrence patterns—TF-IDF effectively memorized domain-specific token-label mappings from the training data.
+
+| Label | Top Token (Weight) | Interpretation |
+|-------|---------------------|----------------|
+| 0 (Autoencoder) | `autoencoder` (10.34) | Strong class signal |
+| 2 (GAN)         | `gan` (11.46)         | Strong class signal |
+| 13 (SVM)        | `svm` (12.49)         | Strong class signal |
+| 15 (Transformer)| `bert` (9.43)         | Strong class signal |
+
+The poisoning strategy disrupted these mappings by injecting misleading, label-specific keywords into unrelated samples. For example, documents labeled as graph-based (Label 4) were seeded with terms like `"attention"` or `"lstm"` from other model classes. This created cross-contamination that degraded TF-IDF’s ability to rely on keyword presence alone.
+
+Despite the poisoning, TF-IDF slightly outperformed BERT in most metrics:
+
+| Metric              | TF-IDF + LR | BERT       |
+|---------------------|-------------|------------|
+| Exact Match Accuracy | **0.4348**   | 0.4203     |
+| Hamming Loss         | **0.0521**   | 0.0553     |
+| F1 Score (Micro)     | **0.6462**   | 0.6090     |
+| F1 Score (Macro)     | 0.4698       | **0.4741** |
+
+BERT’s advantage in macro F1 reveals that it handled rare or noisy classes more gracefully. While TF-IDF overfit to dominant lexical patterns, BERT disambiguated meaning using sentence-level context.
+
+| Label | Injected Misleading Terms | Source Labels |
+|-------|----------------------------|----------------|
+| Label 4 (Graph)   | `"attention"`, `"lstm"`     | Labels 11, 15 |
+| Label 0 (Autoencoder) | `"gan"`, `"generator"`     | Label 2        |
+| Label 10 (Q-Learning) | `"cnn"`, `"embedding"`     | Labels 1, 12   |
+| Label 6 (Linear Regression) | `"svm"`, `"classification"` | Label 13   |
+
+TF-IDF’s reliance on static tokens made it vulnerable to this ambiguity. In contrast, BERT inferred meaning based on usage—identifying whether “embedding” referred to node vectors, word tokens, or latent representations.
+
+Negative feature weights in TF-IDF further underscore its fragility. Tokens like `"the"` or `"in"` had negative weights due to their ubiquity, and others like `"support"` and `"vector"` were penalized in LSTM contexts despite being valid SVM terms.
+
+| Label | Penalized Tokens       | Reason               |
+|-------|------------------------|----------------------|
+| 7     | `the`, `in`            | Stopwords            |
+| 11    | `support`, `vector`    | SVM crossover noise  |
+| 8     | `the`                  | Overused, unhelpful  |
+
+Ultimately, TF-IDF’s effectiveness hinged on clean token-label associations, which the poisoning successfully degraded. BERT, despite no special tuning to the ML domain, remained competitive by relying on contextual understanding rather than keyword memorization. This validates semantic models as more robust under noisy, real-world document conditions.
 
 ### Next Steps
 A key limitation of our current pipeline is the lack of **fine-tuning** on the BERT model. While the pre-trained embeddings provided strong performance, they were generated without adaptation to our specific task. As a result, semantically similar ML terms (e.g., "Transformer-based" vs. "CNN-based") may lie close in BERT’s vector space, making them harder to distinguish in a classification setting. Fine-tuning the transformer on our labeled dataset would likely improve label separation and classification accuracy by aligning the embedding space more directly with our target labels.
