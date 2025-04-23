@@ -5,7 +5,7 @@ permalink: /final
 ---
 ## Introduction/Background
 
-Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Logistic Regression**, **Naïve Bayes**, and **Random Forest** which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
+Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Logistic Regression**, **Naive Bayes**, and **Random Forest** which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
 
 To evaluate classification accuracy, this study will test machine learning models on **Abstract** and **Results** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/) via their free, public API (we previously used used the **Introduction** and **Conlusion** sections for NLP analysis, but based on feedback from Professor Roozbahani and Richard Koulen, as well as our own analysis into the best sections of the paper to use for classification). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
 
@@ -64,19 +64,6 @@ Prior to training, we removed "dead" labels (i.e., classes with no positive samp
 Following training, a **per-class threshold optimization** was performed. Each class’s threshold was adjusted over a fine-grained grid [0.1, 0.9], optimizing for a combined F1 score across multiple averaging strategies (macro, micro, weighted). This process increased performance by tailoring the classification sensitivity for each label.
 
 This model benefits from the deep contextual signals encoded in BERT embeddings while maintaining the interpretability and scalability of linear classifiers.
-#### Naive Bayes with TF-IDF Features
-
-We implemented a Naive Bayes classifier using a **One-vs-Rest (OvR)** strategy to handle multi-label classification across 16 research categories. After receiving guidance on providing a baseline of our BERT-based models to show potential enhancement or shortcoming of leveraging semantic understanding via BERT, we decided to implement a Naive Bayes, TF-IDF-based model. 
-
-For input features, we applied **TF-IDF vectorization** to each paper’s abstract and results section after preprocessing. Preprocessing included tokenization, stopword removal, and lemmatization using **NLTK**, followed by transformation using **sklearn**’s `TfidfVectorizer` with the following configuration: `max_features = 175` (to not over-complicate the simple model) and `ngram_range = (1, 1)`.
-
-This setup captures unigram term importance while reducing the feature space for efficiency—so as to make it as close to a simple keyword-based classifier as possible.
-
-The classifier used was **sklearn**’s `MultinomialNB` wrapped in a `OneVsRestClassifier`, with: `alpha = 0.8` (to apply smoothing and prevent zero probabilities).
-
-The model was trained on the TF-IDF features and evaluated using F1-micro and F1-macro metrics. We further refined classification performance using a **threshold optimization** routine. For each class, the probability threshold was tuned in the range `[0.1, 0.9]` to maximize the average of F1-macro scores. This allowed the model to account for class imbalance and better control the decision boundary for each label.
-
-This Naive Bayes approach provides a simple yet effective baseline for multi-label text classification and demonstrates reasonable performance when paired with carefully engineered keyword-based features and threshold tuning.
 #### Support Vector Machine (SVM)
 ##### **TF-IDF + LinearSVC (SVM)**
 We implemented a multi-label Support Vector Machine classifier using **sklearn**’s **LinearSVC** in a One-vs-Rest (OvR) configuration. To enhance probabilistic interpretability, each binary classifier was calibrated using **CalibratedClassifierCV** with sigmoid scaling.
@@ -103,21 +90,106 @@ As with the TF-IDF model, each binary classifier was calibrated using **Calibrat
 Finally, threshold optimization was performed across all 16 labels using the same L-BFGS-B procedure as above, jointly maximizing F1-micro and F1-macro scores.
 
 The combination of BERT’s semantic richness with a linear classifier and optimized per-label thresholds yielded significantly improved multi-label classification performance—particularly in terms of F1 scores—compared to sparse input representations.
+#### Naive Bayes with TF-IDF Features
 
-#### Multilayer Perceptron
-COMPLETE ONCE WE FIND THE MLP JUPYTER NOTEBOOK
+We implemented a Naive Bayes classifier using a **One-vs-Rest (OvR)** strategy to handle multi-label classification across 16 research categories. After receiving guidance on providing a baseline of our BERT-based models to show potential enhancement or shortcoming of leveraging semantic understanding via BERT, we decided to implement a Naive Bayes, TF-IDF-based model. 
 
+For input features, we applied **TF-IDF vectorization** to each paper’s abstract and results section after preprocessing. Preprocessing included tokenization, stopword removal, and lemmatization using **NLTK**, followed by transformation using **sklearn**’s `TfidfVectorizer` with the following configuration: `max_features = 175` (to not over-complicate the simple model) and `ngram_range = (1, 1)`.
+
+This setup captures unigram term importance while reducing the feature space for efficiency—so as to make it as close to a simple keyword-based classifier as possible.
+
+The classifier used was **sklearn**’s `MultinomialNB` wrapped in a `OneVsRestClassifier`, with: `alpha = 0.8` (to apply smoothing and prevent zero probabilities).
+
+The model was trained on the TF-IDF features and evaluated using F1-micro and F1-macro metrics. We further refined classification performance using a **threshold optimization** routine. For each class, the probability threshold was tuned in the range `[0.1, 0.9]` to maximize the average of F1-macro scores. This allowed the model to account for class imbalance and better control the decision boundary for each label.
+
+This Naive Bayes approach provides a simple yet effective baseline for multi-label text classification and demonstrates reasonable performance when paired with carefully engineered keyword-based features and threshold tuning.
+#### Deep Multilayer Perceptron with BERT Embeddings
+
+We implemented a Deep Multilayer Perceptron (MLP) classifier using PyTorch to perform multi-label classification over 16 potential categories. The model receives 768-dimensional BERT embeddings as input, which capture deep semantic features from each paper’s abstract and result section.
+
+The architecture consists of a feedforward neural network with the following layer structure:
+- Input layer: 768 units  
+- Hidden layers: [768 → 512 → 256] with **Layer Normalization**, **ReLU** activations, and **Dropout (0.2)** between each layer  
+- Output layer: 16 units (one per class), with raw logits passed through a **sigmoid** during inference to produce probabilities
+
+The model was trained using:
+- **Loss function**: `BCEWithLogitsLoss` (binary cross-entropy for multi-label classification)
+- **Optimizer**: `Adam` with learning rate `lr = 0.001`
+- **Epochs**: 50
+- **Batch size**: 32
+
+Training was conducted using the BERT feature vectors, and evaluation was performed on a held-out test set. Predictions were binarized using a global threshold of 0.2 to optimize F1 scores.
+
+This MLP model demonstrates strong performance in capturing complex, non-linear relationships in high-dimensional semantic space, making it an effective deep learning alternative to linear classifiers we previously implemented.
 ## Results and Discussion
 ### Quantitative Metrics
+#### Logistic Regression (TF-IDF + BERT)
 
-| Metric               | Value      |
-| -------------------- | ---------- |
-| Exact Match Accuracy | **0.3931** |
-| Hamming Loss         | **0.0679** |
-| F1 Score (Micro)     | **0.5975** |
-| F1 Score (Macro)     | **0.6395** |
+| Metric               | TF-IDF Logistic Regression | BERT Logistic Regression |
+| -------------------- | -------------------------- | ------------------------ |
+| Exact Match Accuracy | **0.4855**                 | **0.5942**               |
+| Hamming Loss         | **0.0457**                 | **0.0371**               |
+| F1 Score (Micro)     | **0.6645**                 | **0.7285**               |
+| F1 Score (Macro)     | **0.4795**                 | **0.5546**               |
+These scores indicate a notable improvement in model performance after filtering. The BERT-based Logistic Regression model achieved an **Exact Match Accuracy** of **59.4%**, meaning that nearly 60% of the test samples had all predicted labels exactly correct. The **Hamming Loss**—which measures the fraction of incorrect labels—was reduced to just **3.7%**, indicating high reliability across individual label predictions.
 
-These scores indicate a moderate overall performance. 39% of test samples had all predicted labels exactly correct and only 6.8% of the label entries were wrong. Our F1 Micro assumes we treat each prediction equally and understand the overall ability to make correct label predictions—about 60% of (label, sample) pairs were precise and complete. F1 macro is especially important for imbalanced datasets and treats each class equally. This metric showed strong results at ~64%. This suggests that our model handles rare classes reasonably well. 
+The **F1 Score (Micro)** for BERT was **72.9%**, showing strong overall precision and recall when treating each (sample, label) pair equally. The **F1 Score (Macro)** reached **55.5%**, suggesting decent performance even across less frequent categories, though there’s still room for improvement in handling class imbalance.
+
+In comparison, the TF-IDF-based model performed moderately, with an **Exact Match Accuracy** of **48.6%** and a **Hamming Loss** of **4.6%**. Its **Micro F1** of **66.5%** and **Macro F1** of **47.9%** reflect good baseline performance but lag behind the BERT-based model, especially in capturing nuanced or rare labels.
+
+Overall, the BERT-based Logistic Regression model consistently outperforms the TF-IDF baseline across all metrics, particularly in holistic correctness (Exact Match Accuracy) and balanced class representation (Macro F1).
+
+#### SVM (TF-IDF + BERT)
+
+| Metric           | TF-IDF SVM | BERT SVM |
+| -------------------- | -------------- | ------------ |
+| Exact Match Accuracy | **0.2246**     | **0.3913**   |
+| Hamming Loss         | **0.0553**     | **0.0489**   |
+| F1 Score (Micro)     | **0.3441**     | **0.5537**   |
+| F1 Score (Macro)     | **0.2331**     | **0.4062**   |
+The SVM-based classification results demonstrate a clear performance gain when using BERT embeddings over TF-IDF features. The **BERT SVM** model attained an **Exact Match Accuracy** of **39.1%**, meaning nearly 4 out of 10 samples had all labels predicted correctly. This is a significant improvement over the **TF-IDF SVM**, which achieved only **22.5%** on the same metric, suggesting that BERT embeddings offer better semantic understanding for multi-label classification.
+
+In terms of **Hamming Loss**, the BERT model also performed slightly better, with only **4.9%** of label predictions being incorrect—compared to **5.5%** for TF-IDF. This suggests a more consistent label-wise prediction accuracy with BERT.
+
+The **F1 Score (Micro)** for BERT was **55.4%**, indicating solid overall performance in identifying correct label assignments across all samples. In contrast, the TF-IDF model struggled here with a lower Micro F1 of **34.4%**, showing difficulty in making precise predictions on a per-label basis.
+
+Lastly, **F1 Score (Macro)**—which evaluates the model’s ability to handle class imbalance by treating each class equally—further illustrates the strength of the BERT model, with **40.6%** versus **23.3%** from the TF-IDF baseline. This metric shows that the BERT SVM model is better at predicting not just common labels but also the rarer ones.
+
+The **BERT-based SVM** provides a substantial improvement across all evaluation metrics, highlighting the benefit of leveraging contextual semantic embeddings over sparse term frequency features in multi-label classification tasks.
+
+#### Naive Bayes (TF-IDF)
+| Metric           | TF-IDF Naive Bayes |
+| -------------------- | ---------------------- |
+| Exact Match Accuracy | **0.3551**             |
+| Hamming Loss         | **0.0562**             |
+| F1 Score (Micro)     | **0.6101**             |
+| F1 Score (Macro)     | **0.3845**             |
+The TF-IDF-based Naive Bayes classifier demonstrates moderate performance on the multi-label classification task. The **Exact Match Accuracy** of **35.5%** indicates that just over a third of the test samples had all labels predicted correctly. While this score is lower than some more complex models, it reflects a reasonable outcome given the simplicity and efficiency of Naive Bayes.
+
+The **Hamming Loss** was **5.6%**, meaning that a relatively small portion of individual label predictions were incorrect. This suggests a decent level of consistency across label-wise decisions, even if complete multi-label accuracy per sample remains limited.
+
+The **F1 Score (Micro)** was **61.0%**, showing that the model performs well in aggregate across all (sample, label) pairs. This score balances precision and recall across the entire dataset and confirms the model’s general reliability in predicting frequently occurring labels.
+
+However, the **F1 Score (Macro)** was **38.5%**, which reflects lower performance on rare or underrepresented classes. Since macro F1 treats all classes equally, this score reveals the model’s struggle with imbalanced datasets and its limited ability to identify minority labels effectively.
+
+While the TF-IDF-based Naive Bayes classifier may not match the performance of deep or embedding-based models, it still provides a lightweight and interpretable baseline with competitive results for common labels—representing how a key-word based classifier may in this task.
+
+#### Deep Multilayer Perceptron (BERT)
+| Metric           | BERT Deep MLP |
+| -------------------- | ----------------- |
+| Exact Match Accuracy | **0.5797**        |
+| Hamming Loss         | **0.0448**        |
+| F1 Score (Micro)     | **0.6754**        |
+| F1 Score (Macro)     | **0.7639**        |
+These results show strong performance from the BERT-based Deep Multilayer Perceptron (MLP) model in the multi-label classification task. The model achieved an **Exact Match Accuracy** of **57.97%**, indicating that nearly 6 out of 10 samples had all labels predicted correctly. This reflects the model’s ability to understand and predict the full set of labels with high precision.
+
+The **Hamming Loss** was **4.48%**, suggesting that only a small fraction of label assignments were incorrect. This low loss reflects the model’s consistent performance across individual label decisions.
+
+The **F1 Score (Micro)** was **67.54%**, which measures the model’s precision and recall across all label/sample pairs. This shows that, in aggregate, the model makes accurate label predictions and is especially strong in handling the dominant classes in the dataset.
+
+The standout metric here is the **F1 Score (Macro)** of **76.39%**, which treats each class equally regardless of frequency. This result is particularly impressive, as it implies the model performs very well even on rare or underrepresented labels—a common challenge in multi-label classification.
+
+Ultimately, the BERT-based Deep MLP model demonstrates excellent generalization and balanced label prediction. Its performance across all metrics makes it a robust choice for scenarios where both common and rare classes must be captured reliably and is the strongest model we trained.
 ### EDA Visualizations
 #### Label Frequency
 
@@ -131,59 +203,72 @@ This 2D visualization consisted of dimensionality reduction (UMAP) and conduct d
 ![Label Frequency](/assets/comparison.png)
 We compared this visualized to t-SNE and PCA to find which preserved a relevant global and local structure, so as to not distort our clusterings by other linear or non-linear dimensionality reduction techniques. 
 ### Model Visualizations
-#### Per-Class F1 vs. Threshold
-![Label Frequency](/assets/per-class-f1-score.png)
-Visualizing the Per-Class F1 vs. Threshold illuminates the optimal threshold for each class that maximized F1. We use this visualization to evaluate individual class performance for each label individually. In our plot, some classes (like "Transformer-based") peak around 0.6–0.7, while others (like "Object Detection") perform best at much lower thresholds. This tells us that a single threshold across all classes would underperform—class-specific tuning is crucial and will be included in our next steps. 
-#### Impact on Global Micro F1
-![Label Frequency](/assets/impact-micro-F1.png)
-In conjunction with the previous visualization, this plot indicates which classes have a disproportionate affect on the overall model performance (the previous visualization illuminates the thresholds we may tune—this visualization portrays the impact of tuning each one of those thresholds). This impact may potentially be due to a class' frequency or correlation with other labels. 
-
-#### Macro F1 vs Per-Class Threshold
-![Label Frequency](/assets/macro-f1-per-class.png)
-Since macro F1 weighs all classes equally, this visualization reveals how rare or poorly performing labels influence fairness across the label space. We observed that tuning thresholds for low-frequency classes (like "Object Detection") causes sharper shifts in macro F1 than common ones — helpful for diagnosing imbalance.
-
-#### ROC Curves per Class
+#### Logistic Regression
+#### ROC Curves per Class (Logistic Regression)
 ![Label Frequency](/assets/roc.png)
 Helps assess class separability. AUC values close to 1.0 (like for "Q-Learning") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
+#### Macro F1 vs Per-Class Threshold (Logistic Regression)
+![Label Frequency](/assets/macro-f1-per-class.png)
+Since macro F1 weighs all classes equally, this visualization reveals how rare or poorly performing labels influence fairness across the label space. We observed that tuning thresholds for low-frequency classes (like "Object Detection") causes sharper shifts in macro F1 than common ones — helpful for diagnosing imbalance.
+#### Impact on Global Micro F1 (Logistic Regression)
+![Label Frequency](/assets/impact-micro-F1.png)
+This plot indicates which classes have a disproportionate affect on the overall model performance (the previous visualization illuminates the thresholds we may tune—this visualization portrays the impact of tuning each one of those thresholds). This impact may potentially be due to a class' frequency or correlation with other labels. 
+
 
 #### Naive Bayes
-#### ROC Curves per Class (Naïve Bayes)
-The ROC curves for Naïve Bayes highlight its ability to distinguish individual classes. Most classes achieve strong separability with AUC scores above 0.85, such as Class 11 (AUC = 0.96) and Class 6 (AUC = 0.95), indicating high classifier confidence for those labels. However, Class 7 presents a significantly flatter curve (AUC = 0.48), suggesting challenges in distinguishing that label from others. These curves reveal that while Naïve Bayes is effective for certain classes, it may struggle on labels with overlapping features or lower representation in the training set.
+#### ROC Curves per Class (Naive Bayes)
+![Plot](/assets/nb-roc.png)
+The ROC curves for Naive Bayes highlight its ability to distinguish individual classes. Most classes achieve strong separability with AUC scores above 0.85, such as Class 11 (AUC = 0.96) and Class 6 (AUC = 0.95), indicating high classifier confidence for those labels. However, Class 7 presents a significantly flatter curve (AUC = 0.48), suggesting challenges in distinguishing that label from others. These curves reveal that while Naive Bayes is effective for certain classes, it may struggle on labels with overlapping features or lower representation in the training set.
+#### Macro F1 vs Per-Class Threshold (Naive Bayes)
+![Plot](/assets/nb-macro.png)
+The Macro F1 plot evaluates fairness across all classes by weighing each class equally. For Naive Bayes, we see notable gains at lower thresholds (~0.1–0.3), with the highest Macro F1 occurring around threshold 0.2 for several classes like Class 5 and Class 2. After this range, the score drops steeply, indicating that rare or lower-performing classes contribute less when thresholds are too strict. This underscores the value of per-class tuning to ensure balanced performance, especially in the presence of label imbalance.
+#### Impact on Global Micro F1 (Naive Bayes)
+![Plot](/assets/nb-impact.png)
+This plot shows how adjusting the classification threshold for each class affects the global Micro F1 score. Notably, Naive Bayes achieves its peak Micro F1 performance at lower thresholds (~0.1–0.2), especially for classes like Class 5 and Class 10. As thresholds increase, performance consistently drops for nearly all classes, emphasizing the model’s preference for more lenient classification boundaries. This trend suggests that optimizing performance under Naive Bayes requires favoring recall, particularly for more dominant or frequent classes.
 
-#### Macro F1 vs Per-Class Threshold (Naïve Bayes)
-The Macro F1 plot evaluates fairness across all classes by weighing each class equally. For Naïve Bayes, we see notable gains at lower thresholds (~0.1–0.3), with the highest Macro F1 occurring around threshold 0.2 for several classes like Class 5 and Class 2. After this range, the score drops steeply, indicating that rare or lower-performing classes contribute less when thresholds are too strict. This underscores the value of per-class tuning to ensure balanced performance, especially in the presence of label imbalance.
-
-#### Impact on Global Micro F1 (Naïve Bayes)
-This plot shows how adjusting the classification threshold for each class affects the global Micro F1 score. Notably, Naïve Bayes achieves its peak Micro F1 performance at lower thresholds (~0.1–0.2), especially for classes like Class 5 and Class 10. As thresholds increase, performance consistently drops for nearly all classes, emphasizing the model’s preference for more lenient classification boundaries. This trend suggests that optimizing performance under Naïve Bayes requires favoring recall, particularly for more dominant or frequent classes.
-
-#### LinearSVC
+#### Support Vector Machine (SVM)
 #### ROC Curves per Class (BERT + LinearSVC)
+![Plot](/assets/svm-roc.png)
 The ROC curves indicate modest separability across most classes, with AUC scores hovering between 0.65 and 0.76 for the majority of labels. For instance, Class 1 (AUC = 0.76) and Class 11 (AUC = 0.75) show relatively strong discrimination, while others like Class 6 (AUC = 0.59) and Class 12 (AUC = 0.57) reflect weaker classifier confidence. Unlike more probabilistic models, the decision boundaries here may be constrained by the hard-margin nature of SVMs, suggesting a need for richer feature representations or additional calibration to improve separation.
-
 #### Macro F1 vs Per-Class Threshold (BERT + LinearSVC)
+![Plot](/assets/svm-macro.png)
 This plot shows erratic variation in macro F1 across thresholds, which may reflect class imbalance and SVC's sensitivity to threshold adjustments. Peaks occur at varied thresholds for different classes, and sharp fluctuations suggest the model reacts unpredictably to minor changes in class-specific thresholds. These patterns imply that without per-class threshold tuning, the model may over- or under-predict specific classes, especially less frequent ones. Tuning thresholds per label could stabilize performance and offer a more balanced classification strategy.
-
 #### Impact on Global Micro F1 (BERT + LinearSVC)
+![Plot](/assets/svm-impact.png)
 Similar to the macro F1 curve, the micro F1 plot for BERT + LinearSVC is highly variable across thresholds. Despite a few peaks around 0.2–0.4 for classes like Class 3 and Class 11, the lack of a clear, sustained improvement region reveals that the model may not be consistently leveraging class weights effectively. The unstable performance may stem from class-wise decision boundary sensitivity or the challenge of mapping SVM decision scores to probabilities. Smoothing predictions or integrating Platt scaling could help mitigate this effect.
 
 #### Deep MLP
 #### ROC Curves per Class (Deep MLP)
+![Plot](/assets/mlp-roc.png)
 The ROC curves for the Deep MLP model indicate strong class separability, with nearly all AUC values exceeding 0.90. Notably, Class 2 and Class 10 achieve perfect discrimination (AUC = 1.00), while Class 0 and Class 15 also perform extremely well (AUC = 0.99). However, a few classes like Class 9 (AUC = 0.66) and Class 13 (AUC = 0.84) show less confident separation, likely due to overlapping feature distributions or lower representation. Overall, the Deep MLP exhibits robust class-wise confidence, suggesting high representational capacity and learning ability.
-
 #### Macro F1 vs Per-Class Threshold (Deep MLP)
-The macro F1 plot demonstrates that performance remains fairly stable across different thresholds, especially between 0.2 and 0.7. Classes such as Class 3 and Class 4 show slightly elevated macro F1 scores above 0.52, but the differences are relatively minor. This stability suggests the Deep MLP handles class imbalance better than more brittle models, and while threshold tuning still matters, it is less volatile than in models like Naïve Bayes or LinearSVC.
-
+![Plot](/assets/mlp-macro.png)
+The macro F1 plot demonstrates that performance remains fairly stable across different thresholds, especially between 0.2 and 0.7. Classes such as Class 3 and Class 4 show slightly elevated macro F1 scores above 0.52, but the differences are relatively minor. This stability suggests the Deep MLP handles class imbalance better than more brittle models, and while threshold tuning still matters, it is less volatile than in models like Naive Bayes or LinearSVC.
 #### Impact on Global Micro F1 (Deep MLP)
+![Plot](/assets/mlp-impact.png)
 The micro F1 plot reinforces the stability observed in macro F1. Most classes remain between 0.68 and 0.70 across the full threshold range, with minimal fluctuation. This smooth behavior suggests the Deep MLP is well-calibrated on the frequent classes and does not overly rely on threshold sensitivity to achieve high performance. The model’s generalization is likely driven by its ability to learn nonlinear relationships from the BERT embeddings used as input.
-
-#### Per-Class F1 vs. Threshold (Deep MLP)
-This bar plot highlights substantial variation in F1 performance across classes. Class 10 stands out with an F1 score of 1.00, while Class 9 and Class 6 lag behind, scoring below 0.5. These disparities may result from uneven class frequencies or inherent differences in text features among research paper categories. Notably, most classes cluster around the 0.6–0.9 range, reflecting strong per-class precision-recall balance. Future work could investigate boosting performance for underperforming classes via oversampling or data augmentation.
-
 ### Analysis of Algorithm(s)/Model(s)
-
+#### Logistic Regression
 Our model exhibited several strengths that contributed to its moderate success. By leveraging high-quality semantic representations from BERT, the model was able to understand the meaning and context of each paper, going beyond simple keyword matching. The use of class-specific threshold optimization allowed it to better handle imbalanced class distributions and F1 performance. Additionally, the interpretability of logistic regression helped us analyze and understand which dimensions in the embedding space contributed to each prediction and enabled us to further tweak our model's pipeline. 
 
 However, the model also faced some limitations. The dataset contained significant class imbalance, with some categories such as 'Object Detection' having very few examples, making them difficult to learn reliably. Logistic regression, being a linear model, may not capture complex, nonlinear relationships present in the BERT embeddings. Furthermore, the BERT embeddings used were frozen and not fine-tuned on our specific dataset, which limits their ability to adapt to domain-specific subtleties. Finally, since the One-vs-Rest approach treats each label independently, it does not take advantage of correlations and co-occurrence patterns among labels that could potentially enhance prediction accuracy.
+
+#### Support Vector Machine (SVM)
+
+#### Naive Bayes
+
+#### Deep Multilayer Perceptron
+### Comparison of Models
+![Model Comparison Plot](/assets/model-comparison.png)
+The performance comparison across models underscores the central takeaway of this study: contextual embeddings derived from transformer-based models substantially outperform traditional keyword-based approaches in the multi-label classification of ML research papers. As shown in our model comparison chart, BERT-based models demonstrate clear superiority across all four evaluation metrics—**Exact Match Accuracy**, **Hamming Loss**, **F1 Score (Micro)**, and **F1 Score (Macro)**—compared to their TF-IDF-based counterparts.
+
+Among the tested models, the **Deep Multilayer Perceptron (MLP)** leveraging **BERT embeddings** achieved the best overall results. It attained the highest Exact Match Accuracy (0.5797), the lowest Hamming Loss (0.0448), and the strongest F1 scores—particularly a Macro F1 of 0.7639, indicating its ability to generalize across both common and rare classes. This strong performance reflects the model’s ability to learn complex, nonlinear relationships from semantically rich 768-dimensional BERT embeddings extracted from each paper's abstract and results sections.
+
+The **Logistic Regression (BERT)** model also performed well, ranking second across all metrics. Despite its linear nature, it benefited significantly from the semantic depth captured by the BERT embeddings (depicted in the "HDBSCAN Clustering on UMAP Embeddings" visualization above), achieving an Exact Match Accuracy of 0.5942 and a Micro F1 score of 0.7285. Its strong performance reinforces the idea that high-quality semantic feature representations can make even simple models highly effective.
+
+In contrast, models using TF-IDF features underperformed. The **SVM (TF-IDF)** model achieved the lowest overall scores, including a Micro F1 of 0.3441 and Macro F1 of just 0.2331, highlighting its struggle to generalize due to the sparsity and lack of contextual information in TF-IDF representations. Even the **Naive Bayes (TF-IDF)** model, though simpler, outperformed SVM on most metrics—suggesting that its probabilistic assumptions were somewhat better suited to the task, but still limited by the expressiveness of its input features.
+
+These results validate the use of **semantic embedding techniques** in scientific document classification. By incorporating BERT-based embeddings and structuring the classification task around the abstract and results sections, our models were able to better capture the methodological essence of research papers. These findings emphasize the importance of leveraging contextualized representations and more expressive model architectures in automated literature analysis tasks.
 ### Next Steps
 For this model, we may proceed with  fine-tuning BERT directly for our classification task at-hand.
 
@@ -214,7 +299,7 @@ Based on the template on the class website, here is the contribution table:
 | Name                         | Proposal Contributions                                                          |
 | :--------------------------- | :------------------------------------------------------------------------------ |
 | Aryeman Singh                | Data Extraction & Pre-processing, Model Training, Gantt Chart, GitHub Pages     |
-| Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, GitHub Pages                               |
+| Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, GitHub Pages              |
 | Naman Goyal                  | Helped with Report Writing, Led Feature Extraction, Model Training, Gantt Chart |
 | Lokkit Sanjay Babu Narayanan | Feature Extraction, Model Training                                              |
 | Aryika Kumar                 | Feature Extraction, Model Training                                              |
