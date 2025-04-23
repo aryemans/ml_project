@@ -7,10 +7,10 @@ permalink: /final
 
 Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Logistic Regression**, **Naive Bayes**, and **Random Forest** which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
 
-To evaluate classification accuracy, this study will test machine learning models on **Abstract** and **Results** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/) via their free, public API (we previously used used the **Introduction** and **Conlusion** sections for NLP analysis, but based on feedback from Professor Roozbahani and Richard Koulen, as well as our own analysis into the best sections of the paper to use for classification). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on content rather than simple keyword matching.
+To evaluate classification accuracy, this study will test machine learning models on **Abstract** and **Results** sections of research papers sourced from [**Papers with Code**](https://paperswithcode.com/) via their free, public API (we previously used the **Introduction** and **Conlusion** sections for NLP analysis, but we generated a new dataset based on feedback from Professor Roozbahani and Richard Koulen, as well as our own analysis into the best sections of the paper to use for classification). These sections often summarize the key contributions and methodology of a paper, making them a suitable dataset for classification. The objective is to determine the most effective approach for categorizing research papers based on their content.
 
 ## Problem Definition
-As the world of machine learning focused research expands, gathering relevant literature for review within a specific domain gets increasingly difficult. Modern keyword matching techniques do not accurately capture deeper semantic meaning and context. As a result, our structured approach to classify machine learning research papers provides researchers with quick access to relevant papers and efficiently analyze their domain. 
+As the world of machine learning focused research expands, gathering relevant literature for review within a specific domain gets increasingly difficult. Modern keyword matching techniques may not accurately capture deeper semantic meaning and context. As a result, our structured approach to classify machine learning research papers should provide researchers with quick access to relevant papers and efficiently analyze their domain. 
 
 ## Methods
 
@@ -100,7 +100,7 @@ This setup captures unigram term importance while reducing the feature space for
 
 The classifier used was **sklearn**’s `MultinomialNB` wrapped in a `OneVsRestClassifier`, with: `alpha = 0.8` (to apply smoothing and prevent zero probabilities).
 
-The model was trained on the TF-IDF features and evaluated using F1-micro and F1-macro metrics. We further refined classification performance using a **threshold optimization** routine. For each class, the probability threshold was tuned in the range `[0.1, 0.9]` to maximize the average of F1-macro scores. This allowed the model to account for class imbalance and better control the decision boundary for each label.
+The model was trained on the TF-IDF features and evaluated using F1-micro and F1-macro metrics. We further refined classification performance using a **threshold optimization** routine. For each class, the probability threshold was tuned in the range `[0.1, 0.9]` while the other classes were kept at a 0.5 threshold to maximize their average of F1-macro scores. This allowed the model to account for class imbalance and better control the decision boundary for each label.
 
 This Naive Bayes approach provides a simple yet effective baseline for multi-label text classification and demonstrates reasonable performance when paired with carefully engineered keyword-based features and threshold tuning.
 #### Deep Multilayer Perceptron with BERT Embeddings
@@ -315,12 +315,12 @@ Despite the poisoning, TF-IDF slightly outperformed BERT in most metrics:
 
 BERT’s advantage in macro F1 reveals that it handled rare or noisy classes more gracefully. While TF-IDF overfit to dominant lexical patterns, BERT disambiguated meaning using sentence-level context.
 
-| Label | Injected Misleading Terms | Source Labels |
-|-------|----------------------------|----------------|
-| Label 4 (Graph)   | `"attention"`, `"lstm"`     | Labels 11, 15 |
-| Label 0 (Autoencoder) | `"gan"`, `"generator"`     | Label 2        |
-| Label 10 (Q-Learning) | `"cnn"`, `"embedding"`     | Labels 1, 12   |
-| Label 6 (Linear Regression) | `"svm"`, `"classification"` | Label 13   |
+| Label | Injected Misleading Terms |
+|-------|----------------------------|
+| Label 4 (Graph)   | `"attention"`, `"lstm"`     |
+| Label 0 (Autoencoder) | `"gan"`, `"generator"`     |
+| Label 10 (Q-Learning) | `"cnn"`, `"embedding"`     |
+| Label 6 (Linear Regression) | `"svm"`, `"classification"` |
 
 TF-IDF’s reliance on static tokens made it vulnerable to this ambiguity. In contrast, BERT inferred meaning based on usage—identifying whether “embedding” referred to node vectors, word tokens, or latent representations.
 
