@@ -131,6 +131,7 @@ This MLP model demonstrates strong performance in capturing complex, non-linear 
 | Hamming Loss         | **0.0457**                 | **0.0371**               |
 | F1 Score (Micro)     | **0.6645**                 | **0.7285**               |
 | F1 Score (Macro)     | **0.4795**                 | **0.5546**               |
+
 These scores indicate a notable improvement in model performance after filtering. The BERT-based Logistic Regression model achieved an **Exact Match Accuracy** of **59.4%**, meaning that nearly 60% of the test samples had all predicted labels exactly correct. The **Hamming Loss**—which measures the fraction of incorrect labels—was reduced to just **3.7%**, indicating high reliability across individual label predictions.
 
 The **F1 Score (Micro)** for BERT was **72.9%**, showing strong overall precision and recall when treating each (sample, label) pair equally. The **F1 Score (Macro)** reached **55.5%**, suggesting decent performance even across less frequent categories, though there’s still room for improvement in handling class imbalance.
@@ -147,6 +148,7 @@ Overall, the BERT-based Logistic Regression model consistently outperforms the T
 | Hamming Loss         | **0.0553**     | **0.0489**   |
 | F1 Score (Micro)     | **0.3441**     | **0.5537**   |
 | F1 Score (Macro)     | **0.2331**     | **0.4062**   |
+
 The SVM-based classification results demonstrate a clear performance gain when using BERT embeddings over TF-IDF features. The **BERT SVM** model attained an **Exact Match Accuracy** of **39.1%**, meaning nearly 4 out of 10 samples had all labels predicted correctly. This is a significant improvement over the **TF-IDF SVM**, which achieved only **22.5%** on the same metric, suggesting that BERT embeddings offer better semantic understanding for multi-label classification.
 
 In terms of **Hamming Loss**, the BERT model also performed slightly better, with only **4.9%** of label predictions being incorrect—compared to **5.5%** for TF-IDF. This suggests a more consistent label-wise prediction accuracy with BERT.
@@ -158,12 +160,14 @@ Lastly, **F1 Score (Macro)**—which evaluates the model’s ability to handle c
 The **BERT-based SVM** provides a substantial improvement across all evaluation metrics, highlighting the benefit of leveraging contextual semantic embeddings over sparse term frequency features in multi-label classification tasks.
 
 #### Naive Bayes (TF-IDF)
+
 | Metric           | TF-IDF Naive Bayes |
 | -------------------- | ---------------------- |
 | Exact Match Accuracy | **0.3551**             |
 | Hamming Loss         | **0.0562**             |
 | F1 Score (Micro)     | **0.6101**             |
 | F1 Score (Macro)     | **0.3845**             |
+
 The TF-IDF-based Naive Bayes classifier demonstrates moderate performance on the multi-label classification task. The **Exact Match Accuracy** of **35.5%** indicates that just over a third of the test samples had all labels predicted correctly. While this score is lower than some more complex models, it reflects a reasonable outcome given the simplicity and efficiency of Naive Bayes.
 
 The **Hamming Loss** was **5.6%**, meaning that a relatively small portion of individual label predictions were incorrect. This suggests a decent level of consistency across label-wise decisions, even if complete multi-label accuracy per sample remains limited.
@@ -175,12 +179,14 @@ However, the **F1 Score (Macro)** was **38.5%**, which reflects lower performanc
 While the TF-IDF-based Naive Bayes classifier may not match the performance of deep or embedding-based models, it still provides a lightweight and interpretable baseline with competitive results for common labels—representing how a key-word based classifier may in this task.
 
 #### Deep Multilayer Perceptron (BERT)
+
 | Metric           | BERT Deep MLP |
 | -------------------- | ----------------- |
 | Exact Match Accuracy | **0.5797**        |
 | Hamming Loss         | **0.0448**        |
 | F1 Score (Micro)     | **0.6754**        |
 | F1 Score (Macro)     | **0.7639**        |
+
 These results show strong performance from the BERT-based Deep Multilayer Perceptron (MLP) model in the multi-label classification task. The model achieved an **Exact Match Accuracy** of **57.97%**, indicating that nearly 6 out of 10 samples had all labels predicted correctly. This reflects the model’s ability to understand and predict the full set of labels with high precision.
 
 The **Hamming Loss** was **4.48%**, suggesting that only a small fraction of label assignments were incorrect. This low loss reflects the model’s consistent performance across individual label decisions.
@@ -192,7 +198,6 @@ The standout metric here is the **F1 Score (Macro)** of **76.39%**, which treats
 Ultimately, the BERT-based Deep MLP model demonstrates excellent generalization and balanced label prediction. Its performance across all metrics makes it a robust choice for scenarios where both common and rare classes must be captured reliably and is the strongest model we trained.
 ### EDA Visualizations
 #### Label Frequency
-
 ![Label Frequency](/assets/label-frequency.png)
 Conducting this visualization opened our eyes to the possibility of bias in the model due to imbalanced data, which is why when we trained our Logistic Regression model, we used the `class_weight` hyperparameter to balance the weight of each class and we threw our labels, like ensemble-based which had a frequency of 0 in our training set.
 
@@ -285,6 +290,10 @@ The **Logistic Regression (BERT)** model also performed well, ranking second acr
 In contrast, models using TF-IDF features underperformed. The **SVM (TF-IDF)** model achieved the lowest overall scores, including a Micro F1 of 0.3441 and Macro F1 of just 0.2331, highlighting its struggle to generalize due to the sparsity and lack of contextual information in TF-IDF representations. Even the **Naive Bayes (TF-IDF)** model, though simpler, outperformed SVM on most metrics—suggesting that its probabilistic assumptions were somewhat better suited to the task, but still limited by the expressiveness of its input features.
 
 These results validate the use of **semantic embedding techniques** in scientific document classification. By incorporating BERT-based embeddings and structuring the classification task around the abstract and results sections, our models were able to better capture the methodological essence of research papers. These findings emphasize the importance of leveraging contextualized representations and more expressive model architectures in automated literature analysis tasks.
+
+#### Data Poisoning (Comparison of TF-IDF vs. BERT)
+
+
 ### Next Steps
 A key limitation of our current pipeline is the lack of **fine-tuning** on the BERT model. While the pre-trained embeddings provided strong performance, they were generated without adaptation to our specific task. As a result, semantically similar ML terms (e.g., "Transformer-based" vs. "CNN-based") may lie close in BERT’s vector space, making them harder to distinguish in a classification setting. Fine-tuning the transformer on our labeled dataset would likely improve label separation and classification accuracy by aligning the embedding space more directly with our target labels.
 
