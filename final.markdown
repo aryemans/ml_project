@@ -145,6 +145,37 @@ Since macro F1 weighs all classes equally, this visualization reveals how rare o
 #### ROC Curves per Class
 ![Label Frequency](/assets/roc.png)
 Helps assess class separability. AUC values close to 1.0 (like for "Q-Learning") show strong classifier confidence. In contrast, flatter curves indicate ambiguous or overlapping feature distributions. This helps identify which labels the model finds easiest or hardest to distinguish based on BERT embeddings.
+
+#### ROC Curves per Class (Naïve Bayes)
+The ROC curves for Naïve Bayes highlight its ability to distinguish individual classes. Most classes achieve strong separability with AUC scores above 0.85, such as Class 11 (AUC = 0.96) and Class 6 (AUC = 0.95), indicating high classifier confidence for those labels. However, Class 7 presents a significantly flatter curve (AUC = 0.48), suggesting challenges in distinguishing that label from others. These curves reveal that while Naïve Bayes is effective for certain classes, it may struggle on labels with overlapping features or lower representation in the training set.
+
+#### Macro F1 vs Per-Class Threshold (Naïve Bayes)
+The Macro F1 plot evaluates fairness across all classes by weighing each class equally. For Naïve Bayes, we see notable gains at lower thresholds (~0.1–0.3), with the highest Macro F1 occurring around threshold 0.2 for several classes like Class 5 and Class 2. After this range, the score drops steeply, indicating that rare or lower-performing classes contribute less when thresholds are too strict. This underscores the value of per-class tuning to ensure balanced performance, especially in the presence of label imbalance.
+
+#### Impact on Global Micro F1 (Naïve Bayes)
+This plot shows how adjusting the classification threshold for each class affects the global Micro F1 score. Notably, Naïve Bayes achieves its peak Micro F1 performance at lower thresholds (~0.1–0.2), especially for classes like Class 5 and Class 10. As thresholds increase, performance consistently drops for nearly all classes, emphasizing the model’s preference for more lenient classification boundaries. This trend suggests that optimizing performance under Naïve Bayes requires favoring recall, particularly for more dominant or frequent classes.
+
+#### ROC Curves per Class (BERT + LinearSVC)
+The ROC curves indicate modest separability across most classes, with AUC scores hovering between 0.65 and 0.76 for the majority of labels. For instance, Class 1 (AUC = 0.76) and Class 11 (AUC = 0.75) show relatively strong discrimination, while others like Class 6 (AUC = 0.59) and Class 12 (AUC = 0.57) reflect weaker classifier confidence. Unlike more probabilistic models, the decision boundaries here may be constrained by the hard-margin nature of SVMs, suggesting a need for richer feature representations or additional calibration to improve separation.
+
+#### Macro F1 vs Per-Class Threshold (BERT + LinearSVC)
+This plot shows erratic variation in macro F1 across thresholds, which may reflect class imbalance and SVC's sensitivity to threshold adjustments. Peaks occur at varied thresholds for different classes, and sharp fluctuations suggest the model reacts unpredictably to minor changes in class-specific thresholds. These patterns imply that without per-class threshold tuning, the model may over- or under-predict specific classes, especially less frequent ones. Tuning thresholds per label could stabilize performance and offer a more balanced classification strategy.
+
+#### Impact on Global Micro F1 (BERT + LinearSVC)
+Similar to the macro F1 curve, the micro F1 plot for BERT + LinearSVC is highly variable across thresholds. Despite a few peaks around 0.2–0.4 for classes like Class 3 and Class 11, the lack of a clear, sustained improvement region reveals that the model may not be consistently leveraging class weights effectively. The unstable performance may stem from class-wise decision boundary sensitivity or the challenge of mapping SVM decision scores to probabilities. Smoothing predictions or integrating Platt scaling could help mitigate this effect.
+
+#### ROC Curves per Class (Deep MLP)
+The ROC curves for the Deep MLP model indicate strong class separability, with nearly all AUC values exceeding 0.90. Notably, Class 2 and Class 10 achieve perfect discrimination (AUC = 1.00), while Class 0 and Class 15 also perform extremely well (AUC = 0.99). However, a few classes like Class 9 (AUC = 0.66) and Class 13 (AUC = 0.84) show less confident separation, likely due to overlapping feature distributions or lower representation. Overall, the Deep MLP exhibits robust class-wise confidence, suggesting high representational capacity and learning ability.
+
+#### Macro F1 vs Per-Class Threshold (Deep MLP)
+The macro F1 plot demonstrates that performance remains fairly stable across different thresholds, especially between 0.2 and 0.7. Classes such as Class 3 and Class 4 show slightly elevated macro F1 scores above 0.52, but the differences are relatively minor. This stability suggests the Deep MLP handles class imbalance better than more brittle models, and while threshold tuning still matters, it is less volatile than in models like Naïve Bayes or LinearSVC.
+
+#### Impact on Global Micro F1 (Deep MLP)
+The micro F1 plot reinforces the stability observed in macro F1. Most classes remain between 0.68 and 0.70 across the full threshold range, with minimal fluctuation. This smooth behavior suggests the Deep MLP is well-calibrated on the frequent classes and does not overly rely on threshold sensitivity to achieve high performance. The model’s generalization is likely driven by its ability to learn nonlinear relationships from the BERT embeddings used as input.
+
+#### Per-Class F1 vs. Threshold (Deep MLP)
+This bar plot highlights substantial variation in F1 performance across classes. Class 10 stands out with an F1 score of 1.00, while Class 9 and Class 6 lag behind, scoring below 0.5. These disparities may result from uneven class frequencies or inherent differences in text features among research paper categories. Notably, most classes cluster around the 0.6–0.9 range, reflecting strong per-class precision-recall balance. Future work could investigate boosting performance for underperforming classes via oversampling or data augmentation.
+
 ### Analysis of Algorithm(s)/Model(s)
 
 Our model exhibited several strengths that contributed to its moderate success. By leveraging high-quality semantic representations from BERT, the model was able to understand the meaning and context of each paper, going beyond simple keyword matching. The use of class-specific threshold optimization allowed it to better handle imbalanced class distributions and F1 performance. Additionally, the interpretability of logistic regression helped us analyze and understand which dimensions in the embedding space contributed to each prediction and enabled us to further tweak our model's pipeline. 
