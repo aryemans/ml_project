@@ -1,8 +1,3 @@
----
-layout: page
-title: Final Report
-permalink: /final
----
 ## Introduction/Background
 
 Text classification is a supervised learning task to categorize textual data. This study focuses on classifying machine learning research abstracts based on the machine learning (ML) model(s)/algorithm(s) used in a research paper. Prior work highlights effective models such as **Logistic Regression**, **Naive Bayes**, and **Random Forest** which, when trained on well-defined textual features provided from pre-processing methods can provide robust classification [1]–[4]. 
@@ -205,7 +200,7 @@ Conducting this visualization opened our eyes to the possibility of bias in the 
 ![Label Frequency](/assets/hdbscan-umap.png)
 This 2D visualization consisted of dimensionality reduction (UMAP) and conduct density-based clustering (HDBSCAN). We leveraged this visualization to understand the label space and ascertain insight into our corpus. The resulting clustering suggests that papers with similar semantic content are naturally grouped together in the embedding space, validating the idea that BERT embeddings capture deeper topical signals from the text. 
 
-![Label Frequency](/assets/comparison.png)
+![Label Frequency](/assets/comparison-new.png)
 We compared this visualized to t-SNE and PCA to find which preserved a relevant global and local structure, so as to not distort our clusterings by other linear or non-linear dimensionality reduction techniques. 
 ### Model Visualizations
 #### Logistic Regression
@@ -281,7 +276,7 @@ Moreover, visualizations of F1 stability across thresholds emphasized the MLP’
 
 ### Comparison of Models
 ![Model Comparison Plot](/assets/model-comparison.png)
-The performance comparison across models underscores the central takeaway of this study: contextual embeddings derived from transformer-based models substantially outperform traditional keyword-based approaches in the multi-label classification of ML research papers. As shown in our model comparison chart, BERT-based models demonstrate clear superiority across all four evaluation metrics—**Exact Match Accuracy**, **Hamming Loss**, **F1 Score (Micro)**, and **F1 Score (Macro)**—compared to their TF-IDF-based counterparts.
+According to the performance comparison across models, it appears that BERT-based transformer models outperform traditional keyword-based approaches in the multi-label classification of ML research papers. As shown in our model comparison chart, BERT-based models demonstrate clear superiority across all four evaluation metrics—**Exact Match Accuracy**, **Hamming Loss**, **F1 Score (Micro)**, and **F1 Score (Macro)**—compared to their TF-IDF-based counterparts. In the next sub-section "Data Poisoning (Comparison of TF-IDF vs. BERT Logistic Regression)," we further discuss the data poisoning techniques to illuminate specific distinguishing characteristics in the performance of TF-IDF and BERT-based models. 
 
 Among the tested models, the **Deep Multilayer Perceptron (MLP)** leveraging **BERT embeddings** achieved the best overall results. It attained the highest Exact Match Accuracy (0.5797), the lowest Hamming Loss (0.0448), and the strongest F1 scores—particularly a Macro F1 of 0.7639, indicating its ability to generalize across both common and rare classes. This strong performance reflects the model’s ability to learn complex, nonlinear relationships from semantically rich 768-dimensional BERT embeddings extracted from each paper's abstract and results sections.
 
@@ -292,6 +287,10 @@ In contrast, models using TF-IDF features underperformed. The **SVM (TF-IDF)** m
 These results validate the use of **semantic embedding techniques** in scientific document classification. By incorporating BERT-based embeddings and structuring the classification task around the abstract and results sections, our models were able to better capture the methodological essence of research papers. These findings emphasize the importance of leveraging contextualized representations and more expressive model architectures in automated literature analysis tasks.
 
 #### Data Poisoning (Comparison of TF-IDF vs. BERT Logistic Regression)
+
+To evaluate the robustness of semantic representations, we performed label-aware data poisoning on a multi-label ML paper dataset. This involved injecting misleading keywords—specifically referencing model families not present in each paper’s label vector—into the abstract and results sections. The goal was to degrade the effectiveness of shallow text features like TF-IDF and favor models that rely on semantic context.
+
+We chose logistic regression as the classifier for both TF-IDF and BERT embeddings. While not the most powerful model, its simplicity allows us to isolate the impact of the input representation. This setup highlights whether context-aware models like BERT can outperform sparse methods under noisy, obfuscated conditions.
 
 The TF-IDF model showed strong alignment between high-weighted features and specific labels, enabling it to perform well even after semantic poisoning. Terms like `"autoencoder"` (10.34, Label 0), `"gan"` (11.46, Label 2), and `"svm"` (12.49, Label 13) acted as near-perfect class indicators. These aren't learned semantic associations but reflect rigid co-occurrence patterns—TF-IDF effectively memorized domain-specific token-label mappings from the training data.
 
@@ -361,7 +360,7 @@ Based on the template on the class website, here is the contribution table:
 
 | Name                         | Proposal Contributions                                                                                                  |
 | :--------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
-| Aryeman Singh                | Data Extraction & Pre-processing, Model Training, Gantt Chart, GitHub Pages                                             |
+| Aryeman Singh                | Data Extraction & Pre-processing, Model Development & Training, Gantt Chart, GitHub Pages                               |
 | Sameer Arora                 | Data Extraction & Pre-processing, Led Report Writing, Led Results Analysis, Led Comparison of the Models, GitHub Pages  |
 | Naman Goyal                  | Helped with Report Writing, Led Feature Extraction, Model Training, Gantt Chart Organization, Exploratory Data Analysis |
 | Lokkit Sanjay Babu Narayanan | Feature Extraction, Model Training, Visualization Production / Results Analysis                                         |
